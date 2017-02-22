@@ -45,6 +45,7 @@ public class Judge {
       processStatus = POCESS_STATUS.WOLF_APPEAR;
       return POCESS_STATUS.WOLF_APPEAR.getMessage();
     }
+    return "";
   }
 
   public String callWitch() {

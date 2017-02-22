@@ -13,47 +13,53 @@ public class GameConfiguration {
         return wolf;
     }
 
-    public void setWolf(int wolf) {
+    public GameConfiguration setWolf(int wolf) {
         this.wolf = wolf;
+        return this;
     }
 
     public int getWitch() {
         return witch;
     }
 
-    public void setWitch(int witch) {
+    public GameConfiguration setWitch(int witch) {
         this.witch = witch;
+        return this;
     }
 
     public int getProphet() {
         return prophet;
     }
 
-    public void setProphet(int prophet) {
+    public GameConfiguration setProphet(int prophet) {
         this.prophet = prophet;
+        return this;
     }
 
     public int getVillager() {
         return villager;
     }
 
-    public void setVillager(int villager) {
+    public GameConfiguration setVillager(int villager) {
         this.villager = villager;
+        return this;
     }
 
     public int getHunter() {
         return hunter;
     }
 
-    public void setHunter(int hunter) {
+    public GameConfiguration setHunter(int hunter) {
         this.hunter = hunter;
+        return this;
     }
 
     public boolean isHasSheriff() {
         return hasSheriff;
     }
 
-    public void setHasSheriff(boolean hasSheriff) {
+    public GameConfiguration setHasSheriff(boolean hasSheriff) {
         this.hasSheriff = hasSheriff;
+        return this;
     }
 }
