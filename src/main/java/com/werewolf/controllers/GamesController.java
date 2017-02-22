@@ -16,10 +16,9 @@ public class GamesController {
     private GamePool gamePool;
 
     @RequestMapping(value = "/games", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Game> createGame(@RequestBody GameConfiguration gameConfiguration) {
+    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration) {
         Game game = new Game(gameConfiguration);
-        return ResponseEntity.ok().body(game);
+        return ResponseEntity.ok().body(game.toString());
     }
 
 

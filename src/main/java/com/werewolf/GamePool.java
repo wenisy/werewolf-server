@@ -17,4 +17,8 @@ public class GamePool {
     public HashMap<String, Game> getGames() {
         return games;
     }
+
+    public Game getGameById(String id) {
+        return games.get(id);
+    };
 }

@@ -2,9 +2,7 @@ package com.werewolf.models;
 
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
 
-@Component
 public class Game {
 
     private Map<Integer, Player> playerMap;
@@ -23,4 +21,6 @@ public class Game {
         }
         return Optional.empty();
     }
+
+
 }
