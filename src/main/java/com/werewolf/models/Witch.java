@@ -6,6 +6,8 @@ public class Witch extends Role {
     private boolean poison = true;
     private boolean antidote = true;
 
+
+
     public int getType() {
         return type;
     }
@@ -31,7 +33,10 @@ public class Witch extends Role {
     }
 
     @Override
-    public void execute(Player player) {
+    public Object execute(Player player) {
 
+
+
+        return null;
     }
 }
