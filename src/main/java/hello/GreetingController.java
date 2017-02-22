@@ -1,6 +1,7 @@
 package hello;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -8,6 +9,9 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,6 +51,11 @@ public class GreetingController {
 
         messagingTemplate.convertAndSendToUser(sessionId,"/queue/position-updates", "http://tsn.baidu.com/text2audio?tex=" + message + "&lan=zh&cuid=1&ctp=1&tok=24.2beb0786a12a2b365a92239414f5b6db.2592000.1488864448.282335-9247277%22",
                 headerAccessor.getMessageHeaders());
+    }
+
+    @RequestMapping(value = "/abc", method = RequestMethod.GET)
+    public ResponseEntity abc (@RequestParam("Id") Integer Id) {
+        return ResponseEntity.ok(Id);
     }
 
 }
