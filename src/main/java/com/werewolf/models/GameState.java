@@ -4,9 +4,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameStatus {
+public class GameState {
 
-  public GameStatus(int roomNO, int totalPlayerCount, HashMap<Integer, Player> playerMap) {
+  public GameState(int roomNO, int totalPlayerCount, HashMap<Integer, Player> playerMap) {
     this.roomNo = roomNO;
     this.totalPlayerCount = totalPlayerCount;
     this.playerMap = playerMap;
