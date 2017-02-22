@@ -1,5 +1,7 @@
 package com.werewolf.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Hunter extends Role{
@@ -7,7 +9,7 @@ public class Hunter extends Role{
     private int type = GOD;
     private boolean skillStatus = true;
     private static String name = "HUNTER";
-    private ExecuteResultModel result;
+    private Map<Integer, String> executeResult = null;
 
 
     public boolean hasSkill() {
@@ -19,13 +21,13 @@ public class Hunter extends Role{
     }
 
     @Override
-    public Object execute(Map<String, Object> param) {
+    public Map<Integer, String> execute(Map<String, Object> param) {
         Player player = (Player)param.get("Player");
-        result.setTargetSitId(player.getSitId());
-        if(hasSkill()){
-            result.setExecuteResult(false);
+
+        if(skillStatus){
+            executeResult.put(player.getSeatId(), "killed");
         }
-        return result;
+        return executeResult;
     }
 
     @Override
@@ -36,5 +38,12 @@ public class Hunter extends Role{
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<String> getSkills() {
+        List<String> skills = new ArrayList<>();
+        skills.add("revenge");
+        return skills;
     }
 }

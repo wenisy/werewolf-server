@@ -1,21 +1,27 @@
 package com.werewolf.models;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Werewolf extends Role{
 
     private static String name = "WEREWOLF";
     private int type = WEREWOLF;
-    private ExecuteResultModel result;
+    private Map<Integer, String> executeResult = null;
 
 
     @Override
-    public Object execute(Map<String, Object> param) {
+    public Map<Integer, String> execute(Map<String, Object> param) {
         Player player = (Player)param.get("Player");
-        result.setTargetSitId(player.getSitId());
-        result.setExecuteResult(false);
-        return result;
+        String action = (String)param.get("Action");
+        if("suicide".equals(action)){
+            executeResult.put(player.getSeatId(), "suicide");
+        }else {
+            executeResult.put(player.getSeatId(), "killed");
+        }
+        return executeResult;
     }
 
     @Override
@@ -26,5 +32,12 @@ public class Werewolf extends Role{
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<String> getSkills() {
+        List<String> skills = new ArrayList<>();
+        skills.add("suicide");
+        return skills;
     }
 }

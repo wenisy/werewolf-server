@@ -1,23 +1,27 @@
 package com.werewolf.models;
 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Player {
 
-    private int sitId;
+    private int seatId;
     private boolean ready;
     private boolean alive;
     private boolean campaign;
     private boolean sheriff;
     private Role role;
-    private boolean[] skillsStatus;
+    private List<String> skills;
 
 
-    public int getSitId() {
-        return sitId;
+    public int getSeatId() {
+        return seatId;
     }
 
-    public void setSitId(int sitId) {
-        this.sitId = sitId;
+    public void setSeatId(int seatId) {
+        this.seatId = seatId;
     }
 
     public boolean isReady() {
@@ -40,8 +44,8 @@ public class Player {
         return campaign;
     }
 
-    public void setCampaign(boolean campaign) {
-        this.campaign = campaign;
+    public void campaignForSheriff() {
+        this.campaign = true;
     }
 
     public boolean isSheriff() {
@@ -60,52 +64,20 @@ public class Player {
         this.role = role;
     }
 
-    public boolean[] getSkillsStatus(){
-        return skillsStatus;
+    public List<String> getSkills(){
+        skills = role.getSkills();
+        skills.add("vote");
+        skills.add("voteForCampaign");
+        if(isCampaign()){
+            skills.remove("voteForCampaign");
+        }
+        return skills;
     }
 
-    public void setSkillsStatus(){
-        switch(role.getName()){
-            case "VILLAGER" :{
-                if(this.isCampaign()){
-                    skillsStatus = new boolean[]{false};
-                }else{
-                    skillsStatus = new boolean[]{true};
-                }
-            }break;
-            case "WEREWOLF" :{
-                if(this.isCampaign()){
-                    skillsStatus = new boolean[]{false};
-                }else{
-                    skillsStatus = new boolean[]{true};
-                }
-            }break;
-            case "PROPHET" :{
-                if(this.isCampaign()){
-                    skillsStatus = new boolean[]{false};
-                }else{
-                    skillsStatus = new boolean[]{true};
-                }
-            }break;
-            case "WITCH" :{
-                Witch witch = (Witch)role;
-                if(this.isCampaign()){
-                    skillsStatus = new boolean[]{false, witch.hasPoison(), witch.hasAntidote()};
-                }else{
-                    skillsStatus = new boolean[]{true, witch.hasPoison(), witch.hasAntidote()};
-                }
-            }break;
-            case "HUNTER" :{
-                Hunter hunter = (Hunter)role;
-                if(this.isCampaign()){
-                    skillsStatus = new boolean[]{false, hunter.hasSkill()};
-                }else{
-                    skillsStatus = new boolean[]{true, hunter.hasSkill()};
-                }
-            }break;
-            default:
-                break;
-        }
+    public Map<Integer, Integer> vote(int seatId){
+        Map<Integer, Integer> voteResult = new HashMap<>();
+        voteResult.put(this.getSeatId(), seatId);
+        return voteResult;
     }
 
 }
