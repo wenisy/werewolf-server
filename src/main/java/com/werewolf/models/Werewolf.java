@@ -1,27 +1,20 @@
 package com.werewolf.models;
 
+
 import java.util.Map;
 
+public class Werewolf extends Role{
 
-public class Prophet extends Role {
+    private static String name = "WEREWOLF";
+    private int type = WEREWOLF;
+    private ExecuteResultModel result;
 
-    private int type = GOD;
-    private ExecuteResultModel result = null;
-    private static String name = "PROPHET";
 
     @Override
     public Object execute(Map<String, Object> param) {
-
-        boolean isGoodMam = true;
         Player player = (Player)param.get("Player");
-
-        if(1 == player.getRole().getType()){
-            isGoodMam = false;
-        }
-
         result.setTargetSitId(player.getSitId());
-        result.setExecuteResult(isGoodMam);
-
+        result.setExecuteResult(false);
         return result;
     }
 
@@ -34,6 +27,4 @@ public class Prophet extends Role {
     public String getName() {
         return name;
     }
-
-
 }

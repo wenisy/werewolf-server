@@ -2,27 +2,31 @@ package com.werewolf.models;
 
 public class ExecuteResultModel {
 
-    private int sitId;
-    private boolean result;
+    private int sourceSitId;
+    private int targetSitId;
+    private boolean executeResult;
 
-    public ExecuteResultModel(int sitId, boolean result) {
-        this.sitId = sitId;
-        this.result = result;
+    public int getSourceSitId() {
+        return sourceSitId;
     }
 
-    public int getSitId() {
-        return sitId;
+    public void setSourceSitId(int sourceSitId) {
+        this.sourceSitId = sourceSitId;
     }
 
-    public void setSitId(int sitId) {
-        this.sitId = sitId;
+    public int getTargetSitId() {
+        return targetSitId;
     }
 
-    public boolean isResult() {
-        return result;
+    public void setTargetSitId(int targetSitId) {
+        this.targetSitId = targetSitId;
     }
 
-    public void setResult(boolean result) {
-        this.result = result;
+    public boolean isExecuteResult() {
+        return executeResult;
+    }
+
+    public void setExecuteResult(boolean executeResult) {
+        this.executeResult = executeResult;
     }
 }

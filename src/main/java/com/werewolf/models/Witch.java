@@ -7,6 +7,8 @@ public class Witch extends Role {
     private int type = GOD;
     private boolean poison = true;
     private boolean antidote = true;
+    private static String name = "WITCH";
+    private ExecuteResultModel result;
 
 
 
@@ -14,8 +16,22 @@ public class Witch extends Role {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public boolean hasPoison() {
+        return poison;
+    }
+
+    public boolean hasAntidote() {
+        return antidote;
+    }
+
+    public void setAntidote(boolean antidote) {
+        this.antidote = antidote;
+    }
+
+
+    @Override
+    public String getName() {
+        return name;
     }
 
 
@@ -59,16 +75,23 @@ public class Witch extends Role {
                 break;
             }
         }
-        return player;
+        return result;
     }
 
     private void usePoision(Player player){
-        player.setAlive(false);
+        result.setTargetSitId(player.getSitId());
+        result.setExecuteResult(false);
+        if("HUNTER".equals(player.getRole().getName())){
+            Hunter temp = (Hunter)player.getRole();
+            temp.setSkillStatus(false);
+            player.setRole(temp);
+        }
         poison = false;
     }
 
     private void useAntidote(Player player){
-        player.setAlive(true);
-        antidote = true;
+        result.setTargetSitId(player.getSitId());
+        result.setExecuteResult(true);
+        antidote = false;
     }
 }
