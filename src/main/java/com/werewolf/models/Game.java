@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 
 public class Game {
 
-    private Map<Integer, Player> playerMap;
+    private Map<String, Player> playerMap;
     private String gameId;
     private Queue<RoleType> playerQueue = new LinkedList<>();
 
@@ -33,8 +33,7 @@ public class Game {
         //TODO 对queue进行随机排序
     }
 
-
-    public Optional<Player> getPlayerById(Integer id) {
+    public Optional<Player> getPlayerById(String id) {
         if(playerMap.containsKey(id)) {
             return Optional.of(playerMap.get(id));
         }
@@ -47,5 +46,13 @@ public class Game {
 
     public Queue<RoleType> getPlayerQueue() {
         return playerQueue;
+    }
+
+    public void addPlayer(String sessionId, Player player) {
+        playerMap.put(sessionId, player);
+    }
+
+    public Map<String, Player> getPlayerMap() {
+        return playerMap;
     }
 }

@@ -17,7 +17,7 @@ public class GameService {
         Game game = gamePool.getGameById(gameId);
         Queue<RoleType> playerQueue = game.getPlayerQueue();
 
-        if(playerQueue.isEmpty()) {
+        if (playerQueue.isEmpty()) {
             return "角色分配完毕";
         }
         RoleType roleType = playerQueue.poll();
@@ -26,8 +26,35 @@ public class GameService {
     }
 
     private void addPlayer(Game game, RoleType roleType, String sessionId, Integer seatId) {
-//
-//        Role role = new Role();
-//        new Player(seatId, role);
+        Role role = generateRoleByType(roleType);
+        Player player = new Player(seatId, role);
+
+        game.addPlayer(sessionId, player);
+    }
+
+    private Role generateRoleByType(RoleType roleType) {
+        Role role;
+        switch (roleType) {
+            case VILLAGER:
+                role = new Villager();
+                break;
+            case WEREWOLF:
+                role = new Werewolf();
+                break;
+            case PROPHET:
+                role = new Prophet();
+                break;
+            case WITCH:
+                role = new Witch();
+                break;
+            case HUNTER:
+                role = new Hunter();
+                break;
+            default:
+                role = new Villager();
+                break;
+
+        }
+        return role;
     }
 }

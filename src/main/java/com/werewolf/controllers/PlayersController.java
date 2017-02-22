@@ -15,8 +15,10 @@ public class PlayersController {
     private GamePool gamePool;
 
     @RequestMapping(value = "/players/{id}", method = RequestMethod.PUT)
-    public void readyToGame(@PathVariable Integer id, @RequestBody String body ) {
+    public void readyToGame(@PathVariable String id, @RequestBody String body ) {
         Boolean isReady = new JSONObject(body).getBoolean("isReady");
+
+        //TODO: fix this id should be sessionID
         Optional<Player> player = gamePool.getGameById("some fake game id").getPlayerById(id);
 
         if(player.isPresent()) {
