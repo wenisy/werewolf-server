@@ -1,6 +1,8 @@
 package com.werewolf.models;
 
+import java.util.HashMap;
 import java.util.Map;
+
 
 public class Prophet extends Role {
 
@@ -8,9 +10,11 @@ public class Prophet extends Role {
     private ExecuteResultModel result = null;
 
     @Override
-    public Object execute(Player player) {
+    public Object execute(Map<String, Object> param) {
 
         boolean isGoodMam = true;
+        Player player = (Player)param.get("Player");
+
         if(1 == player.getRole().getType()){
             isGoodMam = false;
         }
