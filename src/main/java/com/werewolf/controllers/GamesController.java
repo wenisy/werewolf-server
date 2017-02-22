@@ -5,6 +5,7 @@ import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
 import com.werewolf.models.PlayerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,9 @@ public class GamesController {
 
     @RequestMapping(value = "/games", method = RequestMethod.POST)
     @ResponseBody
-    public Game createGame(@RequestBody GameConfiguration gameConfiguration) {
-        return new Game(gameConfiguration);
+    public ResponseEntity<Game> createGame(@RequestBody GameConfiguration gameConfiguration) {
+        Game game = new Game(gameConfiguration);
+        return ResponseEntity.ok().body(game);
     }
 
 

@@ -31,7 +31,7 @@ public class Witch extends Role {
     }
 
     @Override
-    public void execute(int sitId) {
+    public void execute(Player player) {
 
     }
 }
