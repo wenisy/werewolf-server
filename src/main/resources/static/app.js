@@ -12,13 +12,25 @@ function setConnected(connected) {
     $("#greetings").html("");
 }
 
+function connectAsJudge() {
+    var socket = new SockJS('/werewolf-connect');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/user/queue/judge', function (greeting) {
+            showGreeting(greeting.body);
+        });
+    });
+}
+
 function connect() {
     var socket = new SockJS('/werewolf-connect');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/queue/555', function (greeting) {
+        stompClient.subscribe('/user/queue/123', function (greeting) {
             showGreeting(greeting.body);
         });
     });
@@ -32,12 +44,21 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+function joinRoom() {
     stompClient.send("/app/join", {}, JSON.stringify({
-        'myId': location.search.split("user")[1],
-        'name': encodeURIComponent($("#name").val()),
-        'seatId': 555,
-        'gameId': '123'
+        'seatId': 123,
+        'gameId': $("#room-no").val()
+    }));
+}
+
+function createRoom() {
+    stompClient.send("/app/create", {}, JSON.stringify({
+        'wolf': 3,
+        'villager': 3,
+        'witch': 1,
+        'prophet': 1,
+        'hunter': 1,
+        'hasSheriff': true
     }));
 }
 
@@ -49,8 +70,10 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
+    $( "#connect-as-judge" ).click(function() { connectAsJudge(); });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $( "#create" ).click(function() { createRoom(); });
+    $( "#join" ).click(function() { joinRoom(); });
 });
 

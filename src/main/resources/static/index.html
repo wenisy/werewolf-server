@@ -19,19 +19,35 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
+                    <button id="connect-as-judge" class="btn btn-default" type="submit">Connect as Judge</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect</button>
                 </div>
             </form>
         </div>
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                    <label>Click here to create a room !</label>
                 </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
+                <button id="create" class="btn btn-default" type="submit">Create</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect as a Player</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="room-no">Input Room No.:</label>
+                    <input type="text" id="room-no" class="form-control" placeholder="room no.">
+                </div>
+                <button id="join" class="btn btn-default" type="submit">Join</button>
             </form>
         </div>
     </div>

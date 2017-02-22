@@ -29,7 +29,7 @@ public class GamesController {
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @MessageMapping("/create")
-    @SendToUser("/queue/{seatId}")
+    @SendToUser("/queue/judge")
     public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
         String sessionId = accessor.getSessionId();
 
