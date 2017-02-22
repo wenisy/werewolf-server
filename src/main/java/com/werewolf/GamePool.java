@@ -2,9 +2,8 @@ package com.werewolf;
 
 import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
+import org.springframework.stereotype.Component;
 
 @Component
 public class GamePool {
@@ -24,8 +23,6 @@ public class GamePool {
         games.put("a default game", new Game(defaultGameConfiguration));
     }
 
-    ;
-
     public HashMap<String, Game> getGames() {
         return games;
     }
@@ -33,6 +30,4 @@ public class GamePool {
     public Game getGameById(String id) {
         return games.get(id);
     }
-
-    ;
 }

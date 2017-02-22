@@ -18,7 +18,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/queue/position-updates', function (greeting) {
+        stompClient.subscribe('/user/queue/555', function (greeting) {
             showGreeting(greeting.body);
         });
     });
@@ -33,9 +33,11 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/trade", {}, JSON.stringify({
+    stompClient.send("/app/join", {}, JSON.stringify({
         'myId': location.search.split("user")[1],
-        'name': encodeURIComponent($("#name").val())
+        'name': encodeURIComponent($("#name").val()),
+        'seatId': 555,
+        'gameId': 123
     }));
 }
 
