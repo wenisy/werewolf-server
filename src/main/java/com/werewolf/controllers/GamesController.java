@@ -2,8 +2,6 @@ package com.werewolf.controllers;
 
 import com.werewolf.models.GameConfiguration;
 import com.werewolf.services.GameService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,9 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 public class GamesController {
@@ -43,9 +44,7 @@ public class GamesController {
         String gameId = new JSONObject(body).get("roomNum").toString();
         Integer seatId = Integer.valueOf((String) new JSONObject(body).get("seatNum"));
 
-        executor.submit(() -> {
-            join(accessor, sessionId, gameId, seatId);
-        });
+        executor.submit(() -> join(accessor, sessionId, gameId, seatId));
     }
 
     private void join(SimpMessageHeaderAccessor accessor, String sessionId, String gameId, Integer seatId) {

@@ -7,7 +7,8 @@ public class Game {
 
     private Map<String, Player> playerMap;
     private String gameId;
-    private LinkedList<RoleType> playerQueue = new LinkedList<>();
+    private Queue<RoleType> playerQueue = new LinkedList<>();
+    private Judge judge;
 
     public Game(GameConfiguration gameConfiguration) {
         char[] digitals = "0123456789".toCharArray();
@@ -34,6 +35,7 @@ public class Game {
 
     public Optional<Player> getPlayerById(String sessionId) {
         if(playerMap.containsKey(sessionId)) {
+            System.out.println("hahaha");
             return Optional.of(playerMap.get(sessionId));
         }
         return Optional.empty();

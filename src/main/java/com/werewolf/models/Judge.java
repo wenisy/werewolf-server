@@ -1,5 +1,9 @@
 package com.werewolf.models;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by ctuo on 2/22/17.
  */
