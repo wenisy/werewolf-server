@@ -1,8 +1,8 @@
 package com.werewolf.controllers;
 
 import com.werewolf.GamePool;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.werewolf.models.Game;
+import com.werewolf.models.GameConfiguration;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,9 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 public class GamesController {
@@ -25,7 +28,7 @@ public class GamesController {
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @MessageMapping("/create")
-    public ResponseEntity<String> createGame(@RequestBody String body, SimpMessageHeaderAccessor accessor) {
+    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
         String sessionId = accessor.getSessionId();
 //        JSONObject object = new JSONObject(body);
 
@@ -33,7 +36,20 @@ public class GamesController {
 //        System.out.println(object);
 //        System.out.println(body);
 
-        return ResponseEntity.ok().body("hello");
+        if (gameConfiguration == null) {
+            gameConfiguration = new GameConfiguration();
+            gameConfiguration
+                    .setHasSheriff(true)
+                    .setHunter(1)
+                    .setProphet(1)
+                    .setVillager(3)
+                    .setWitch(1)
+                    .setWolf(3);
+        }
+        Game game = new Game(gameConfiguration);
+        gamePool.registerGame(game);
+
+        return ResponseEntity.ok().body(game.getGameId());
     }
 
     @MessageMapping("/join")
