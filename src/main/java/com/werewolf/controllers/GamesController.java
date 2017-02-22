@@ -1,8 +1,6 @@
 package com.werewolf.controllers;
 
 import com.werewolf.GamePool;
-import com.werewolf.models.Game;
-import com.werewolf.models.GameConfiguration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.json.JSONObject;
@@ -15,8 +13,6 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class GamesController {
@@ -28,10 +24,16 @@ public class GamesController {
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    @RequestMapping(value = "/games", method = RequestMethod.POST)
-    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration) {
-        Game game = new Game(gameConfiguration);
-        return ResponseEntity.ok().body(game.toString());
+    @MessageMapping("/create")
+    public ResponseEntity<String> createGame(@RequestBody String body, SimpMessageHeaderAccessor accessor) {
+        String sessionId = accessor.getSessionId();
+//        JSONObject object = new JSONObject(body);
+
+//        System.out.println(sessionId);
+//        System.out.println(object);
+//        System.out.println(body);
+
+        return ResponseEntity.ok().body("hello");
     }
 
     @MessageMapping("/join")
