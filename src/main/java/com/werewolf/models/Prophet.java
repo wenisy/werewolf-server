@@ -16,8 +16,11 @@ public class Prophet extends Role {
         }
         if(result.isEmpty()){
             result.put(player.getSitId(),isGoodMam);
-        }else{
-            result.
         }
+    }
+
+    @Override
+    public int getType() {
+        return type;
     }
 }
