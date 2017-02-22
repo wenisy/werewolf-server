@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,7 +53,7 @@ public class GamesController {
     public void joinGame(@RequestBody String body, SimpMessageHeaderAccessor accessor) {
 
         String sessionId = accessor.getSessionId();
-        Integer gameId = (Integer) new JSONObject(body).get("gameId");
+        String gameId = new JSONObject(body).get("gameId").toString();
         Integer seatId = (Integer) new JSONObject(body).get("seatId");
 
         executor.submit(() -> {
@@ -62,7 +61,7 @@ public class GamesController {
         });
     }
 
-    private void join(SimpMessageHeaderAccessor accessor, String sessionId, Integer gameId, Integer seatId) {
+    private void join(SimpMessageHeaderAccessor accessor, String sessionId, String gameId, Integer seatId) {
         String roleName = gameService.fetchRole(sessionId, gameId, seatId);
 
         messagingTemplate.convertAndSendToUser(

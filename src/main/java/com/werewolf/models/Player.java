@@ -15,6 +15,14 @@ public class Player {
     private Role role;
     private List<String> skills;
 
+    public Player(int seatId, Role role) {
+        this.seatId = seatId;
+        this.role = role;
+        ready = false;
+        alive = true;
+        campaign = false;
+        sheriff = false;
+    }
 
     public int getSeatId() {
         return seatId;

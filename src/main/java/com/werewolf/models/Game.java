@@ -1,24 +1,13 @@
 package com.werewolf.models;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class Game {
 
     private Map<Integer, Player> playerMap;
     private String gameId;
-
-    private int villagerAmount;
-    private int hunterAmount;
-    private int prophetAmount;
-    private int witchAmount;
-    private int wolfAmount;
-
-    public Game(Map<Integer, Player> playerMap) {
-        this.playerMap = playerMap;
-    }
+    private Queue<RoleType> playerQueue = new LinkedList<>();
 
     public Game(GameConfiguration gameConfiguration) {
         char[] digitals = "0123456789".toCharArray();
@@ -29,7 +18,21 @@ public class Game {
         }
         this.gameId = builder.toString();
         this.playerMap = new HashMap<>();
+
+        initPlayerQueue(gameConfiguration);
     }
+
+    private void initPlayerQueue(GameConfiguration gameConfiguration) {
+        IntStream.range(0, gameConfiguration.getWolf()).forEach(i -> playerQueue.offer(RoleType.WEREWOLF));
+        IntStream.range(0, gameConfiguration.getVillager()).forEach(i -> playerQueue.offer(RoleType.VILLAGER));
+
+        IntStream.range(0, gameConfiguration.getHunter()).forEach(i -> playerQueue.offer(RoleType.HUNTER));
+        IntStream.range(0, gameConfiguration.getProphet()).forEach(i -> playerQueue.offer(RoleType.PROPHET));
+        IntStream.range(0, gameConfiguration.getWitch()).forEach(i -> playerQueue.offer(RoleType.WITCH));
+
+        //TODO 对queue进行随机排序
+    }
+
 
     public Optional<Player> getPlayerById(Integer id) {
         if(playerMap.containsKey(id)) {
@@ -40,5 +43,9 @@ public class Game {
 
     public String getGameId() {
         return gameId;
+    }
+
+    public Queue<RoleType> getPlayerQueue() {
+        return playerQueue;
     }
 }

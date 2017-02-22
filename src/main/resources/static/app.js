@@ -37,7 +37,7 @@ function sendName() {
         'myId': location.search.split("user")[1],
         'name': encodeURIComponent($("#name").val()),
         'seatId': 555,
-        'gameId': 123
+        'gameId': '123'
     }));
 }
 
