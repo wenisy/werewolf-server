@@ -33,11 +33,6 @@ public class GamesController {
     @SendToUser("/queue/{seatId}")
     public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
         String sessionId = accessor.getSessionId();
-//        JSONObject object = new JSONObject(body);
-
-//        System.out.println(sessionId);
-//        System.out.println(object);
-//        System.out.println(body);
 
         if (gameConfiguration == null) {
             gameConfiguration = new GameConfiguration();
@@ -63,20 +58,19 @@ public class GamesController {
         Integer seatId = (Integer) new JSONObject(body).get("seatId");
 
         executor.submit(() -> {
-            join(sessionId, gameId, seatId);
+            join(accessor, sessionId, gameId, seatId);
         });
     }
 
-    private void join(String sessionId, Integer gameId, Integer seatId) {
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-
-        headerAccessor.setSessionId(sessionId);
-        headerAccessor.setLeaveMutable(true);
-
+    private void join(SimpMessageHeaderAccessor accessor, String sessionId, Integer gameId, Integer seatId) {
         String roleName = gameService.fetchRole(sessionId, gameId, seatId);
 
-        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + seatId, "http://tsn.baidu.com/text2audio?tex=" + roleName + "&lan=zh&cuid=1&ctp=1&tok=24.2beb0786a12a2b365a92239414f5b6db.2592000.1488864448.282335-9247277%22",
-                headerAccessor.getMessageHeaders());
+        messagingTemplate.convertAndSendToUser(
+                sessionId,
+                "/queue/" + seatId,
+                "http://tsn.baidu.com/text2audio?tex=" + roleName + "&lan=zh&cuid=1&ctp=1&tok=24.2beb0786a12a2b365a92239414f5b6db.2592000.1488864448.282335-9247277%22",
+                accessor.getMessageHeaders()
+        );
     }
 
 }
