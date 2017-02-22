@@ -19,6 +19,8 @@ public class GameService {
 
         if (playerQueue.isEmpty()) {
             return "角色分配完毕";
+        } else if(game.getPlayerMap().containsKey(sessionId)) {
+            return "您已加入该房间，请勿重新加入";
         }
         RoleType roleType = playerQueue.poll();
         addPlayer(game, roleType, sessionId, seatId);
