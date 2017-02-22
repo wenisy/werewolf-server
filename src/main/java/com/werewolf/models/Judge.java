@@ -11,7 +11,6 @@ public class Judge {
     processStatus = POCESS_STATUS.NIGHT_START;
   }
 
-
   private enum POCESS_STATUS {
     NIGHT_START("天黑了,请大家闭眼"),
     WOLF_APPEAR("狼人请睁眼"),
@@ -32,7 +31,6 @@ public class Judge {
   }
 
   private POCESS_STATUS processStatus;
-
   private GameStatus currentGameStatus;
 
   public String start() {
@@ -45,7 +43,33 @@ public class Judge {
       processStatus = POCESS_STATUS.WOLF_APPEAR;
       return POCESS_STATUS.WOLF_APPEAR.getMessage();
     }
+
+    if(processStatus == POCESS_STATUS.WOLF_APPEAR) {
+      processStatus = POCESS_STATUS.WOLF_KILL;
+      return POCESS_STATUS.WOLF_KILL.getMessage();
+    }
+
+    if(processStatus == POCESS_STATUS.WOLF_KILL) {
+      if(currentGameStatus.getWolfKillNO() > 0) {
+        processStatus = POCESS_STATUS.WOLF_UNIFY_OPINION;
+        return POCESS_STATUS.WOLF_UNIFY_OPINION.getMessage();
+      }
+      else {
+        processStatus = POCESS_STATUS.WOLF_VANISH;
+        return POCESS_STATUS.WOLF_VANISH.getMessage();
+      }
+    }
+
+    if(processStatus == POCESS_STATUS.WOLF_VANISH) {
+      processStatus = POCESS_STATUS.DAY_START;
+      return POCESS_STATUS.DAY_START.getMessage();
+    }
+
     return "";
+  }
+
+  public void updateGameStatus(GameStatus gameStatue) {
+    currentGameStatus = gameStatue;
   }
 
   public String callWitch() {
