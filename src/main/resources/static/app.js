@@ -62,6 +62,14 @@ function createRoom() {
     }));
 }
 
+function readyToGame() {
+    var seatId = 1;
+    stompClient.send("/app/players", {}, JSON.stringify({
+        'gameId': $("#room-no").val(),
+        'isReady': true
+    }));
+}
+
 function showGreeting(message) {
     $("#greetings").append('<tr><td><audio controls="" autoplay="" name="media"><source src=' + encodeURI(message) +' type="audio/mp3">' + '</audio></td></tr>');
 }
@@ -75,5 +83,6 @@ $(function () {
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#create" ).click(function() { createRoom(); });
     $( "#join" ).click(function() { joinRoom(); });
+    $( "#ready" ).click(function() { readyToGame(); });
 });
 

@@ -33,9 +33,10 @@ public class Game {
         //TODO 对queue进行随机排序
     }
 
-    public Optional<Player> getPlayerById(String id) {
-        if(playerMap.containsKey(id)) {
-            return Optional.of(playerMap.get(id));
+    public Optional<Player> getPlayerById(String sessionId) {
+        if(playerMap.containsKey(sessionId)) {
+            System.out.println("hahaha");
+            return Optional.of(playerMap.get(sessionId));
         }
         return Optional.empty();
     }
