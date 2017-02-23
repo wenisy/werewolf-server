@@ -15,13 +15,16 @@ public class Player {
     private Role role;
     private List<String> skills;
 
-    public Player(int seatId, Role role) {
+    private Game game;
+
+    public Player(Game game, int seatId, Role role) {
         this.seatId = seatId;
         this.role = role;
         ready = false;
         alive = true;
         campaign = false;
         sheriff = false;
+        this.game = game;
     }
 
     public int getSeatId() {
@@ -38,6 +41,7 @@ public class Player {
 
     public void setReady(boolean ready) {
         this.ready = ready;
+        game.checkState();
     }
 
     public boolean isAlive() {

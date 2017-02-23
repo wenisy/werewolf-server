@@ -1,11 +1,13 @@
 package com.werewolf.models;
+
 import java.util.HashMap;
+
 /**
  * Created by ctuo on 2/22/17.
  */
 public class Judge {
-  public Judge(GameState initGameState) {
-    this.currentGameState = initGameState;
+  public Judge(GameSnapshot initGameSnapshot) {
+    this.current = GameState.INIT;
     stateRelation = new StateRelation();
 
     STATE_DATA_MAP = new HashMap<String, String>();
@@ -35,7 +37,7 @@ public class Judge {
   }
 
   private final HashMap<String, String> STATE_DATA_MAP;
-  private GameState currentGameState;
+  private GameState current;
   private StateRelation stateRelation;
 
   public String start() {
@@ -43,18 +45,37 @@ public class Judge {
     return STATE_DATA_MAP.get(stateRelation.getCurrentState());
   }
 
-  public String next(GameState currentGameState) {
-    this.currentGameState = currentGameState;
-    stateRelation.goNextState(stateRelation.getCurrentState());
-    return STATE_DATA_MAP.get(stateRelation.getCurrentState());
-  }
-
   public void updateGameState(GameState gameStatue) {
-    currentGameState = gameStatue;
+    current = gameStatue;
   }
+    public String next(GameSnapshot nextSnapshot) {
+        GameState nextState = GameState.transfer(current, nextSnapshot);
+        nextState.setGameSnapshot(nextSnapshot);
+        current = nextState;
+        return getCurrent().getMessage();
+    }
+
+    public String callWitch() {
+        return "";
+    }
+
+    public String callProphet() {
+        return "";
+    }
+
+    public String callHunter() {
+        return "";
+    }
+
+    public String callSheriff() {
+        return "";
+    }
 
   public Boolean isEnd() {
     return false;
   }
 
+    public GameState getCurrent() {
+        return current;
+    }
 }
