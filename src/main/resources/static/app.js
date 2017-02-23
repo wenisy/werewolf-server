@@ -30,7 +30,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/queue/123', function (greeting) {
+        stompClient.subscribe('/user/queue/players', function (greeting) {
             showGreeting(greeting.body);
         });
     });
@@ -46,8 +46,8 @@ function disconnect() {
 
 function joinRoom() {
     stompClient.send("/app/join", {}, JSON.stringify({
-        'seatId': 123,
-        'gameId': $("#room-no").val()
+        'seatNum': "123",
+        'roomNum': $("#room-no").val()
     }));
 }
 
