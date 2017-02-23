@@ -8,8 +8,8 @@ public class Hunter extends Role{
 
     private int type = GOD;
     private boolean skillStatus = true;
-    private static String name = "HUNTER";
-    private Map<Integer, String> executeResult = null;
+    private static String name = "Hunter";
+    private Map<String, Object> executeResult = null;
 
 
     public boolean hasSkill() {
@@ -21,11 +21,12 @@ public class Hunter extends Role{
     }
 
     @Override
-    public Map<Integer, String> execute(Map<String, Object> param) {
+    public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
         Player player = (Player)param.get("Player");
 
         if(skillStatus){
-            executeResult.put(player.getSeatId(), "killed");
+            executeResult.put("ActionResult", "kill");
+            executeResult.put("TargetSeatId", player.getSeatId());
         }
         return executeResult;
     }
@@ -42,7 +43,7 @@ public class Hunter extends Role{
 
     @Override
     public List<String> getSkills() {
-        List<String> skills = new ArrayList<>();
+        List<String> skills = super.getSkills();
         skills.add("revenge");
         return skills;
     }

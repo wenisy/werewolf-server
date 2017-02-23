@@ -7,19 +7,21 @@ import java.util.Map;
 
 public class Werewolf extends Role{
 
-    private static String name = "WEREWOLF";
+    private static String name = "Werewolf";
     private int type = WEREWOLF;
-    private Map<Integer, String> executeResult = null;
+    private Map<String, Object> executeResult = null;
 
 
     @Override
-    public Map<Integer, String> execute(Map<String, Object> param) {
+    public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
         Player player = (Player)param.get("Player");
         String action = (String)param.get("Action");
         if("suicide".equals(action)){
-            executeResult.put(player.getSeatId(), "suicide");
+            executeResult.put("ActionResult", "suicide");
+            executeResult.put("TargetSeatId", player.getSeatId());
         }else {
-            executeResult.put(player.getSeatId(), "killed");
+            executeResult.put("ActionResult", "kill");
+            executeResult.put("TargetSeatId", player.getSeatId());
         }
         return executeResult;
     }
@@ -36,7 +38,7 @@ public class Werewolf extends Role{
 
     @Override
     public List<String> getSkills() {
-        List<String> skills = new ArrayList<>();
+        List<String> skills = super.getSkills();
         skills.add("suicide");
         return skills;
     }

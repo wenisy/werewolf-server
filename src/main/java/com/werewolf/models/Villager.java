@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class Villager extends Role{
 
-    private static String name = "VILLAGER";
+    private static String name = "Villager";
     private int type = VILLAGER;
 
     @Override
-    public Map<Integer, String> execute(Map<String, Object> param) {
+    public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
         return null;
     }
 
@@ -26,7 +26,7 @@ public class Villager extends Role{
 
     @Override
     public List<String> getSkills() {
-        List<String> skills = new ArrayList<>();
+        List<String> skills = super.getSkills();
         return skills;
     }
 }

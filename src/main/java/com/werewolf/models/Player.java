@@ -1,6 +1,8 @@
 package com.werewolf.models;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,6 @@ public class Player {
     private boolean campaign;
     private boolean sheriff;
     private Role role;
-    private List<String> skills;
 
     private Game game;
 
@@ -76,20 +77,19 @@ public class Player {
         this.role = role;
     }
 
-    public List<String> getSkills(){
-        skills = role.getSkills();
-        skills.add("vote");
-        skills.add("voteForCampaign");
-        if(isCampaign()){
-            skills.remove("voteForCampaign");
-        }
-        return skills;
-    }
 
     public Map<Integer, Integer> vote(int seatId){
         Map<Integer, Integer> voteResult = new HashMap<>();
         voteResult.put(this.getSeatId(), seatId);
         return voteResult;
+    }
+
+    public List<String> skills(){
+        List<String> skills = this.getRole().getSkills();
+        if(isCampaign()){
+            skills.remove("voteForCampaign");
+        }
+        return skills;
     }
 
 }

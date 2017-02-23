@@ -7,8 +7,8 @@ public class Witch extends Role {
     private int type = GOD;
     private boolean poison = true;
     private boolean antidote = true;
-    private static String name = "WITCH";
-    private Map<Integer, String> executeResult = null;
+    private static String name = "Witch";
+    private Map<String, Object> executeResult = null;
 
 
 
@@ -31,7 +31,7 @@ public class Witch extends Role {
 
     @Override
     public List<String> getSkills() {
-        List<String> skills = new ArrayList<String>();
+        List<String> skills = super.getSkills();
         if(poison){
             skills.add("poison");
         }else{
@@ -47,7 +47,7 @@ public class Witch extends Role {
 
 
     @Override
-    public Map<Integer, String> execute(Map<String, Object> param) {
+    public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
 
         Player player = (Player) param.get("Player");
         String action = (String) param.get("Action");
@@ -58,11 +58,13 @@ public class Witch extends Role {
         if(getSkills().contains(action)){
             switch(action){
                 case "poison":
-                    executeResult.put(player.getSeatId(), "killed");
+                    executeResult.put("ActionResult","kill");
+                    executeResult.put("TargetSeatId", player.getSeatId());
                     poison = false;
                 break;
                 case "antidote":
-                    executeResult.put(player.getSeatId(), "saved");
+                    executeResult.put("ActionResult", "saved");
+                    executeResult.put("TargetSeatId", player.getSeatId());
                     antidote = false;
                 break;
             }
