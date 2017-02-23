@@ -8,7 +8,7 @@ public class Prophet extends Role {
 
     private int type = GOD;
     private Map<String, Object> executeResult = null;
-    private static String name = "Prophet";
+    private static String name = "prophet";
 
     @Override
     public Map<String, Object> executeSpecialAction(Map<String, Object> param) {

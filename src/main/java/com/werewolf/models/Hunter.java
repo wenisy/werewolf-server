@@ -7,7 +7,7 @@ public class Hunter extends Role{
 
     private int type = GOD;
     private boolean skillStatus = true;
-    private static String name = "Hunter";
+    private static String name = "hunter";
     private Map<String, Object> executeResult = null;
 
 

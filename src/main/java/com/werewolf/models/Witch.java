@@ -7,7 +7,7 @@ public class Witch extends Role {
     private int type = GOD;
     private boolean poison = true;
     private boolean antidote = true;
-    private static String name = "Witch";
+    private static String name = "witch";
     private Map<String, Object> executeResult = null;
 
 

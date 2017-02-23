@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Villager extends Role{
 
-    private static String name = "Villager";
+    private static String name = "villager";
     private int type = VILLAGER;
 
     @Override

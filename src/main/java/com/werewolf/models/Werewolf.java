@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Werewolf extends Role{
 
-    private static String name = "Werewolf";
+    private static String name = "werewolf";
     private int type = WEREWOLF;
     private Map<String, Object> executeResult = null;
 
