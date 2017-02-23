@@ -11,8 +11,9 @@ public class GameResponseVO {
     private Boolean daylight;
     private Boolean alive;
 
-    public static GameResponseVO getVO(Integer seatId, Game game){
+    public static GameResponseVO getVO(Integer seatId, Game game, String roleName){
         return GameResponseVO.getVO(game)
+                .setRole(roleName)
                 .setVoice(game.getPlayerById(seatId).map(Player::isJudge).orElseGet(() -> false));
     }
 

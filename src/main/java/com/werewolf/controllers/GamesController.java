@@ -48,7 +48,7 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game, roleName));
     }
 
     @MessageMapping(value = "/players")
