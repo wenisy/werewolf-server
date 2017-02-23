@@ -5,9 +5,9 @@ import java.util.stream.IntStream;
 
 public class Game {
 
-    private Map<String, Player> playerMap;
+    private Map<String, Player> players;
     private String gameId;
-    private Queue<RoleType> playerQueue = new LinkedList<>();
+    private LinkedList<RoleType> playerQueue = new LinkedList<>();
     private Judge judge;
 
     public Game(GameConfiguration gameConfiguration) {
@@ -18,9 +18,11 @@ public class Game {
             builder.append(digitals[random.nextInt(digitals.length)]);
         }
         this.gameId = builder.toString();
-        this.playerMap = new HashMap<>();
+        this.players = new HashMap<>();
 
         initPlayerQueue(gameConfiguration);
+
+        judge = new Judge(getSnapshot());
     }
 
     private void initPlayerQueue(GameConfiguration gameConfiguration) {
@@ -34,9 +36,9 @@ public class Game {
     }
 
     public Optional<Player> getPlayerById(String sessionId) {
-        if(playerMap.containsKey(sessionId)) {
+        if(players.containsKey(sessionId)) {
             System.out.println("hahaha");
-            return Optional.of(playerMap.get(sessionId));
+            return Optional.of(players.get(sessionId));
         }
         return Optional.empty();
     }
@@ -45,15 +47,27 @@ public class Game {
         return gameId;
     }
 
-    public Queue<RoleType> getPlayerQueue() {
+    public LinkedList<RoleType> getPlayerQueue() {
         return playerQueue;
     }
 
     public void addPlayer(String sessionId, Player player) {
-        playerMap.put(sessionId, player);
+        players.put(sessionId, player);
     }
 
-    public Map<String, Player> getPlayerMap() {
-        return playerMap;
+    public Map<String, Player> getPlayers() {
+        return players;
+    }
+
+    public void checkState() {
+        GameSnapshot snapshot = getSnapshot();
+        judge.next(snapshot);
+    }
+
+    private GameSnapshot getSnapshot() {
+        ArrayList<PlayerSnapshot> playerSnapshots = new ArrayList<>();
+        players.keySet().stream().map(key -> new PlayerSnapshot(players.get(key)))
+                .forEach(playerSnapshot -> playerSnapshots.add(playerSnapshot));
+        return new GameSnapshot(playerSnapshots);
     }
 }

@@ -4,10 +4,18 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Created by wzhao on 22/02/2017.
+ */
 public enum GameState {
 
+    NIL(""),
     INIT("游戏创建成功"),
-    NIGHT("天黑请闭眼");
+    NIGHT("天黑请闭眼"),
+    WOLF_KILL("狼人请杀人"), WOLF_KILL_COMPLETE("狼人请闭眼"), WOLF_KILL_RESET("狼人请统一意见"),
+    MORNING("天亮了");
 
     private final String message;
     private GameSnapshot gameSnapshot;
@@ -16,16 +24,61 @@ public enum GameState {
     private int totalPlayerCount;
     private ArrayList<Player> playerList;
 
-    public static GameState init(GameSnapshot initGameSnapshot) {
-        return GameState.INIT;
-    }
-
     GameState(String message) {
         this.message = message;
     }
 
-    public void setGameSnapshot(GameSnapshot snapshot) {
+    public String getMessage() {
+        return this.message;
+    }
+
+    public GameState setGameSnapshot(GameSnapshot snapshot) {
         this.gameSnapshot = snapshot;
+        return this;
+    }
+
+    public static GameState transfer(GameState current, GameSnapshot incomingSnapshot) {
+        GameState next = NIL;
+        switch (current) {
+            case INIT: {
+                if(incomingSnapshot.playersAreReady()) {
+                    next = NIGHT;
+                }
+                break;
+            }
+            case NIGHT: {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException ignored) {}
+                next = WOLF_KILL;
+                break;
+            }
+            case WOLF_KILL: {
+                if (incomingSnapshot.wolfAgreed()) {
+                    next = WOLF_KILL_COMPLETE;
+                } else {
+                    next = WOLF_KILL_RESET;
+                }
+                break;
+            }
+            case WOLF_KILL_RESET: {
+                if (incomingSnapshot.wolfAgreed()) {
+                    next = WOLF_KILL_COMPLETE;
+                } else {
+                    next = WOLF_KILL_RESET;
+                }
+                break;
+            }
+            case WOLF_KILL_COMPLETE: {
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException ignored) {}
+                next = MORNING;
+                break;
+            }
+            default: break;
+        }
+        return next;
     }
 
     public HashMap<String, Integer> getAlivePlayerInfo() {

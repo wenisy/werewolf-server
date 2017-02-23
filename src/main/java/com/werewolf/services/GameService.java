@@ -1,19 +1,11 @@
 package com.werewolf.services;
 
 import com.werewolf.GamePool;
-import com.werewolf.models.Game;
-import com.werewolf.models.GameConfiguration;
-import com.werewolf.models.Hunter;
-import com.werewolf.models.Player;
-import com.werewolf.models.Prophet;
-import com.werewolf.models.Role;
-import com.werewolf.models.RoleType;
-import com.werewolf.models.Villager;
-import com.werewolf.models.Werewolf;
-import com.werewolf.models.Witch;
-import java.util.Queue;
+import com.werewolf.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.LinkedList;
 
 @Component
 public class GameService {
@@ -37,11 +29,11 @@ public class GameService {
 
     public String fetchRole(String sessionId, String gameId, Integer seatId) {
         Game game = gamePool.getGameById(gameId);
-        Queue<RoleType> playerQueue = game.getPlayerQueue();
+        LinkedList<RoleType> playerQueue = game.getPlayerQueue();
 
         if (playerQueue.isEmpty()) {
             return "角色分配完毕";
-        } else if (game.getPlayerMap().containsKey(sessionId)) {
+        } else if(game.getPlayers().containsKey(sessionId)) {
             return "您已加入该房间，请勿重新加入";
         }
         RoleType roleType = playerQueue.poll();
@@ -51,7 +43,7 @@ public class GameService {
 
     private void addPlayer(Game game, RoleType roleType, String sessionId, Integer seatId) {
         Role role = generateRoleByType(roleType);
-        Player player = new Player(seatId, role);
+        Player player = new Player(game, seatId, role);
 
         game.addPlayer(sessionId, player);
     }
