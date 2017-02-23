@@ -48,6 +48,14 @@ public class Game {
         return Optional.empty();
     }
 
+    public Optional<Player> getPlayerBySeatId(int seatId){
+        Optional<Player> player = players.values()
+                .parallelStream()
+                .filter(temp -> temp.getSeatId() == seatId)
+                .findFirst();
+        return player;
+    }
+
     public String getGameId() {
         return gameId;
     }
