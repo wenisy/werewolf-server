@@ -38,7 +38,7 @@ public class GameService {
         }
         RoleType roleType = playerQueue.poll();
         addPlayer(game, roleType, sessionId, seatId);
-        return roleType.getDisplayName();
+        return roleType.getType();
     }
 
     private void addPlayer(Game game, RoleType roleType, String sessionId, Integer seatId) {
