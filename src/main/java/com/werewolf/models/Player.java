@@ -17,7 +17,6 @@ public class Player {
     private boolean campaign;
     private boolean sheriff;
     private Role role;
-    private boolean judge;
 
     private Game game;
     @Autowired
@@ -106,10 +105,7 @@ public class Player {
     }
 
     public boolean isJudge() {
-        return judge;
+        return this.sessionId.equals(game.getJudge().getSessionId());
     }
 
-    public void setJudge(boolean judge) {
-        this.judge = judge;
-    }
 }

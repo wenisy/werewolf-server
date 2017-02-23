@@ -34,7 +34,7 @@ public class GamesController {
         Game game = gameService.registerGame(gameConfiguration, sessionId);
         logger.info("Create new room {}.", game.getGameId());
 
-        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(game));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(game).setVoice(true));
     }
 
     @MessageMapping("/join")
