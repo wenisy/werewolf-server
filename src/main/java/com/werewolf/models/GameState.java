@@ -1,7 +1,6 @@
 package com.werewolf.models;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class GameState {
     private GameSnapshot currentSnapshot;
@@ -88,30 +87,23 @@ public class GameState {
         StateDefinition nextState = currentState;
         switch (currentState) {
             case INIT: {
+                nextState = StateDefinition.WAITING_PLAYERS;
+            }
+            case WAITING_PLAYERS: {
                 if(incomingSnapshot.playersAreReady() && incomingSnapshot.getNumberOfEmptySeat() == 0) {
                     nextState = StateDefinition.NIGHT_START;
                 }
                 break;
             }
             case NIGHT_START: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {}
                 nextState = StateDefinition.WOLF_APPEAR;
                 break;
             }
             case WOLF_APPEAR: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {}
                 nextState = StateDefinition.WOLF_KILL;
                 break;
             }
             case WOLF_KILL: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {}
-
                 if (incomingSnapshot.wolfAgreed()) {
                     nextState = StateDefinition.WOLF_VANISH;
                 } else {
@@ -120,10 +112,6 @@ public class GameState {
                 break;
             }
             case WOLF_UNIFY_OPINION: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {}
-
                 if (incomingSnapshot.wolfAgreed()) {
                     nextState = StateDefinition.WOLF_VANISH;
                 } else {
@@ -132,63 +120,36 @@ public class GameState {
                 break;
             }
             case WOLF_VANISH: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {}
                 nextState = StateDefinition.PROPHET_APPEAR;
                 break;
             }
 
             case PROPHET_APPEAR: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {}
                 nextState = StateDefinition.PROPHET_VANISH;
                 break;
             }
 
             case PROPHET_VANISH: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.WITCH_APPEAR;
                 break;
             }
 
             case WITCH_APPEAR: {
-                try {
-                    TimeUnit.SECONDS.sleep(20);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.WITCH_VANISH;
                 break;
             }
 
             case WITCH_VANISH: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.HUNTER_APPEAR;
                 break;
             }
 
             case HUNTER_APPEAR: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.HUNTER_VANISH;
                 break;
             }
 
             case HUNTER_VANISH: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
-
                 if(incomingSnapshot.needApplySheriff()) {
                     nextState = StateDefinition.DAY_START;
                 }
@@ -204,20 +165,11 @@ public class GameState {
             }
 
             case APPLY_SHERIFF: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.VOTE_FOR_APPLY_SHERIFF;
                 break;
             }
 
             case VOTE_FOR_APPLY_SHERIFF: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {
-                }
-
                 nextState = StateDefinition.SHERIFF_CANDIDATE_RESULT;
                 ArrayList<Integer> campaignPlayers = incomingSnapshot.getApplySheriffID();
                 String resultMessage = "";
@@ -229,30 +181,16 @@ public class GameState {
             }
 
             case SHERIFF_CANDIDATE_RESULT: {
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.SHERIFF_CANDIDATE_SPEECH;
                 break;
             }
 
             case SHERIFF_CANDIDATE_SPEECH: {
-                try {
-                    int totalAlivePlayerCount = incomingSnapshot.getAlivePlayerCount();
-                    //everyone's speech time is 60s
-                    TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.VOTE_FOR_SHERIFF;
                 break;
             }
 
             case VOTE_FOR_SHERIFF: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.SHERIFF_RESULT;
                 nextState.setMessage(nextState.getMessage() + String.valueOf(incomingSnapshot.getSheriffID()) + "号玩家");
                 break;
@@ -279,21 +217,11 @@ public class GameState {
             }
 
             case DAY_SPEECH: {
-                try {
-                    int totalAlivePlayerCount = incomingSnapshot.getAlivePlayerCount();
-                    //everyone's speech time is 60s
-                    TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.VOTE_FOR_DAY_DEATH;
                 break;
             }
 
             case VOTE_FOR_DAY_DEATH: {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.DAY_RESULT;
 
                 ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
@@ -315,10 +243,6 @@ public class GameState {
             }
 
             case DEATH_SPEECH: {
-                try {
-                    TimeUnit.SECONDS.sleep(30);
-                } catch (InterruptedException ignored) {
-                }
                 nextState = StateDefinition.NIGHT_START;
                 break;
             }

@@ -6,18 +6,18 @@ import com.werewolf.models.GameState;
 import com.werewolf.models.Player;
 import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class GamesController {
@@ -67,21 +67,8 @@ public class GamesController {
             logger.info("Player {} is ready, role is {}, next state is: {}.",
                     p.getSeatId(), p.getRole().getName(), next.getCurrentState().getMessage());
 
-            if (current.equals(next)) return;
-            sendNextToJudge(game, next);
 
         });
-    }
-
-    private void sendNextToJudge(Game game, GameState next) {
-        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
-        String judgeSessionId = game.getJudge();
-
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setSessionId(judgeSessionId);
-        headerAccessor.setLeaveMutable(true);
-        logger.info("Sending message to judge.");
-        gameMessageBroker.sendMessage(headerAccessor, response);
     }
 
     @MessageMapping("/play")
@@ -116,10 +103,6 @@ public class GamesController {
             GameState next = game.checkState();
 
             logger.info("Player {} is killed.",target.getSeatId());
-
-            if (current.equals(next)) return;
-            sendNextToJudge(game, next);
-
         });
     }
 

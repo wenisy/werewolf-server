@@ -1,13 +1,15 @@
 package com.werewolf.models;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import com.werewolf.controllers.GameMessageBroker;
+import com.werewolf.models.response.GameResponseVO;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
+
+import static com.werewolf.models.GameState.StateDefinition.*;
 
 public class Game {
 
@@ -15,8 +17,15 @@ public class Game {
     private String gameId;
     private LinkedList<RoleType> playerQueue = new LinkedList<>();
     private Judge judge;
+    private GameState.StateDefinition[] autoTransferStates  = {INIT, NIGHT_START, WOLF_APPEAR, WOLF_VANISH, WITCH_VANISH,
+            PROPHET_VANISH, HUNTER_VANISH, DAY_START, APPLY_SHERIFF, SHERIFF_CANDIDATE_RESULT, SHERIFF_RESULT,
+            NIGHT_RESULT, DAY_RESULT
+    };
 
-    public Game(GameConfiguration gameConfiguration, String sessionId) {
+    private GameMessageBroker messageBroker;
+
+    public Game(GameConfiguration gameConfiguration, String sessionId, GameMessageBroker gameMessageBroker) {
+        this.messageBroker = gameMessageBroker;
         char[] digitals = "0123456789".toCharArray();
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
@@ -73,9 +82,30 @@ public class Game {
     }
 
     public GameState checkState() {
+        GameState current = getCurrentState();
         GameSnapshot snapshot = getSnapshot();
+        GameState next = judge.next(snapshot);
 
-        return judge.next(snapshot);
+        if (current.equals(next)) return next;
+        sendNextToJudge(this, next);
+
+        if (Arrays.asList(autoTransferStates).contains(next.getCurrentState())) {
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException ignored) {}
+            next = judge.next(snapshot);
+        }
+        return next;
+    }
+
+    private void sendNextToJudge(Game game, GameState next) {
+        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+        String judgeSessionId = game.getJudge();
+
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(judgeSessionId);
+        headerAccessor.setLeaveMutable(true);
+        messageBroker.sendMessage(headerAccessor, response);
     }
 
     private GameSnapshot getSnapshot() {

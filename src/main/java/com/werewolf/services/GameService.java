@@ -1,6 +1,7 @@
 package com.werewolf.services;
 
 import com.werewolf.GamePool;
+import com.werewolf.controllers.GameMessageBroker;
 import com.werewolf.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,9 @@ public class GameService {
     @Autowired
     private GamePool gamePool;
 
+    @Autowired
+    private GameMessageBroker messageBroker;
+
     public String registerGame(GameConfiguration gameConfiguration, String sessionId) {
         if (gameConfiguration == null) {
             gameConfiguration = new GameConfiguration()
@@ -22,7 +26,7 @@ public class GameService {
                     .setWitch(0)
                     .setWolf(1);
         }
-        Game game = new Game(gameConfiguration, sessionId);
+        Game game = new Game(gameConfiguration, sessionId, messageBroker);
         gamePool.registerGame(game);
         return game.getGameId();
     }
