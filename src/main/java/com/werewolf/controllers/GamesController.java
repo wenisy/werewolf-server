@@ -17,6 +17,8 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -84,6 +86,45 @@ public class GamesController {
         headerAccessor.setLeaveMutable(true);
         logger.info("Sending message to judge.");
         gameMessageBroker.sendMessage(headerAccessor, response);
+    }
+
+    @MessageMapping("/play")
+    public void play(@RequestBody String body, SimpMessageHeaderAccessor accessor){
+        String sessionId = accessor.getSessionId();
+        String gameId = new JSONObject(body).getString("roomNum");
+        String action = new JSONObject(body).getString("action");
+        int seatId = new JSONObject(body).getInt("target");
+
+        Game game = gameService.getGameById(gameId);
+        Optional<Player> player = game.getPlayerById(sessionId);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("Player", game.getPlayerBySeatId(seatId));
+        param.put("Action", action.split(":")[1]);
+
+        player.ifPresent(p -> {
+            GameState current = game.getCurrentState();
+            Map<String, Object> actionResult = p.getRole().executeSpecialAction(param);
+            Player target = game.getPlayerBySeatId((int)actionResult.get("TargetSeatId")).get();
+            switch((String)actionResult.get("ActionResult")){
+                case "kill":
+                    target.setAlive(false);
+                    break;
+                case "saved":
+                    target.setAlive(true);
+                    break;
+                default:
+                    break;
+            }
+
+            GameState next = game.checkState();
+
+            logger.info("Player {} is killed.",target.getSeatId());
+
+            if (current.equals(next)) return;
+            sendNextToJudge(game, next);
+
+        });
     }
 
 }
