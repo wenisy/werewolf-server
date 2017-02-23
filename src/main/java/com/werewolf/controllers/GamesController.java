@@ -1,6 +1,7 @@
 package com.werewolf.controllers;
 
 import com.werewolf.models.GameConfiguration;
+import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,13 +9,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class GamesController {
@@ -29,13 +30,12 @@ public class GamesController {
 
     @MessageMapping("/create")
     @SendToUser("/queue/judge")
-    public ResponseEntity<JSONObject> createGame(@RequestBody GameConfiguration gameConfiguration) {
+    @ResponseBody
+    public GameResponseVO createGame(@RequestBody GameConfiguration gameConfiguration) {
         String roomNum = gameService.registerGame(gameConfiguration);
         logger.info("Create new room {}.", roomNum);
 
-        JSONObject response = new JSONObject();
-        response.put("roomNum", roomNum);
-        return ResponseEntity.ok().body(response);
+        return new GameResponseVO().setRoomNum(roomNum);
     }
 
     @MessageMapping("/join")
@@ -53,10 +53,11 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
+        GameResponseVO response = new GameResponseVO().setRoleName(roleName);
         messagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/queue/players",
-                "http://tsn.baidu.com/text2audio?tex=" + roleName + "&lan=zh&cuid=1&ctp=1&tok=24.2beb0786a12a2b365a92239414f5b6db.2592000.1488864448.282335-9247277%22",
+                response,
                 accessor.getMessageHeaders()
         );
     }
