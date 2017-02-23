@@ -2,6 +2,8 @@ package com.werewolf.controllers;
 
 import com.werewolf.models.GameConfiguration;
 import com.werewolf.services.GameService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +15,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Controller
 public class GamesController {
@@ -30,11 +29,13 @@ public class GamesController {
 
     @MessageMapping("/create")
     @SendToUser("/queue/judge")
-    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration) {
-        String gameId = gameService.registerGame(gameConfiguration);
-        logger.info("Create new room {}.", gameId);
+    public ResponseEntity<JSONObject> createGame(@RequestBody GameConfiguration gameConfiguration) {
+        String roomNum = gameService.registerGame(gameConfiguration);
+        logger.info("Create new room {}.", roomNum);
 
-        return ResponseEntity.ok().body(gameId);
+        JSONObject response = new JSONObject();
+        response.put("roomNum", roomNum);
+        return ResponseEntity.ok().body(response);
     }
 
     @MessageMapping("/join")
