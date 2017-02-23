@@ -126,7 +126,14 @@ public class Game {
         logger.info("Next state: {}", next.getStateMessage());
 
         if (next.getCurrentState().equals(GameState.StateDefinition.WOLF_KILL)) {
-
+            Map<Integer, Player> players = game.getPlayers();
+            players.keySet().stream()
+                    .map(players::get)
+                    .filter(player -> player.getRole().getName().toLowerCase().equals(RoleType.WEREWOLF.getType()) && player.isAlive())
+                    .forEach(player -> {
+                        GameResponseVO response = new GameResponseVO().setRole(player.getRole().getName()).setDaylight(false);
+                        messageBroker.sendMessageToPlayer(player.getSessionId(), player.getSeatId(), response);
+                    });
         }
 
         GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);

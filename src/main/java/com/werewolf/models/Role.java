@@ -26,5 +26,4 @@ abstract public class Role {
         return skills;
     }
 
-
 }

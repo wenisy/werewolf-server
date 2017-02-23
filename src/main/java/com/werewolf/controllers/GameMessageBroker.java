@@ -31,4 +31,19 @@ public class GameMessageBroker {
                 )
         );
     }
+
+    public void sendMessageToPlayer(String sessionId, Integer seatNum, GameResponseVO response) {
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(sessionId);
+        headerAccessor.setLeaveMutable(true);
+
+        executor.submit(() ->
+                messagingTemplate.convertAndSendToUser(
+                        sessionId,
+                        "/queue/players",
+                        response,
+                        headerAccessor.getMessageHeaders()
+                )
+        );
+    }
 }
