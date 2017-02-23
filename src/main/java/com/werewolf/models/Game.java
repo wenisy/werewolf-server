@@ -89,6 +89,6 @@ public class Game {
     }
 
     public GameState getCurrentState() {
-        return judge.getCurrentState();
+        return new GameState(judge.getCurrentState());
     }
 }

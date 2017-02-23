@@ -70,19 +70,20 @@ public class GamesController {
                     p.getSeatId(), p.getRole().getName(), next.getCurrentState().getMessage());
 
             if (current.equals(next)) return;
-
-            logger.info("Game {} start!", gameId);
-            GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage(next.getCurrentState())).setVoice(true);
-            String judgeSessionId = game.getJudge();
-
-            if (sessionId.equals(judgeSessionId)) {
-                SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-                headerAccessor.setSessionId(judgeSessionId);
-                headerAccessor.setLeaveMutable(true);
-                gameMessageBroker.sendMessage(headerAccessor, response);
-            }
+            sendNextToJudge(game, next);
 
         });
+    }
+
+    private void sendNextToJudge(Game game, GameState next) {
+        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+        String judgeSessionId = game.getJudge();
+
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(judgeSessionId);
+        headerAccessor.setLeaveMutable(true);
+        logger.info("Sending message to judge.");
+        gameMessageBroker.sendMessage(headerAccessor, response);
     }
 
 }

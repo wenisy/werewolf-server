@@ -6,7 +6,11 @@ import java.util.concurrent.TimeUnit;
 public class GameState {
     private GameSnapshot currentSnapshot;
 
-    public enum stateDefinition {
+    public GameSnapshot getCurrentSnapshot() {
+        return currentSnapshot;
+    }
+
+    public enum StateDefinition {
         INIT("游戏创建成功"),
         WAITING_PLAYERS("等待更多玩家加入"),
         NIGHT_START("天黑了,请大家闭眼"),
@@ -35,7 +39,7 @@ public class GameState {
 
         private String message;
 
-        stateDefinition(String message) {
+        StateDefinition(String message) {
             this.message = message;
         }
 
@@ -48,34 +52,44 @@ public class GameState {
         }
     }
 
-    private stateDefinition currentState;
+    private StateDefinition currentState;
 
     GameState(GameSnapshot currentSnapshot) {
         this.currentSnapshot = currentSnapshot;
     }
 
-    public void initState() {
-        currentState = stateDefinition.INIT;
+    GameState(GameState origin) {
+        this.currentSnapshot = origin.getCurrentSnapshot();
+        this.currentState = origin.getCurrentState();
     }
 
-    public stateDefinition getCurrentState() {
+    GameState(StateDefinition stateDefinition, GameSnapshot currentSnapshot) {
+        this.currentState = stateDefinition;
+        this.currentSnapshot = currentSnapshot;
+    }
+
+    public void initState() {
+        currentState = StateDefinition.INIT;
+    }
+
+    public StateDefinition getCurrentState() {
         return currentState;
     }
 
-    public String getStateMessage(stateDefinition currentState) {
-        return currentState.getMessage();
+    public String getStateMessage() {
+        return this.currentState.getMessage();
     }
 
     public void setCurrentSnapshot(GameSnapshot currentSnapshot) {
         this.currentSnapshot = currentSnapshot;
     }
 
-    public void transfer(GameSnapshot incomingSnapshot) {
-        stateDefinition nextState = currentState;
+    public GameState transfer(GameSnapshot incomingSnapshot) {
+        StateDefinition nextState = currentState;
         switch (currentState) {
             case INIT: {
-                if(incomingSnapshot.playersAreReady()) {
-                    nextState = stateDefinition.NIGHT_START;
+                if(incomingSnapshot.playersAreReady() && incomingSnapshot.getNumberOfEmptySeat() == 0) {
+                    nextState = StateDefinition.NIGHT_START;
                 }
                 break;
             }
@@ -83,14 +97,14 @@ public class GameState {
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {}
-                nextState = stateDefinition.WOLF_APPEAR;
+                nextState = StateDefinition.WOLF_APPEAR;
                 break;
             }
             case WOLF_APPEAR: {
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {}
-                nextState = stateDefinition.WOLF_KILL;
+                nextState = StateDefinition.WOLF_KILL;
                 break;
             }
             case WOLF_KILL: {
@@ -99,9 +113,9 @@ public class GameState {
                 } catch (InterruptedException ignored) {}
 
                 if (incomingSnapshot.wolfAgreed()) {
-                    nextState = stateDefinition.WOLF_VANISH;
+                    nextState = StateDefinition.WOLF_VANISH;
                 } else {
-                    nextState = stateDefinition.WOLF_UNIFY_OPINION;
+                    nextState = StateDefinition.WOLF_UNIFY_OPINION;
                 }
                 break;
             }
@@ -111,9 +125,9 @@ public class GameState {
                 } catch (InterruptedException ignored) {}
 
                 if (incomingSnapshot.wolfAgreed()) {
-                    nextState = stateDefinition.WOLF_VANISH;
+                    nextState = StateDefinition.WOLF_VANISH;
                 } else {
-                    nextState = stateDefinition.WOLF_UNIFY_OPINION;
+                    nextState = StateDefinition.WOLF_UNIFY_OPINION;
                 }
                 break;
             }
@@ -121,7 +135,7 @@ public class GameState {
                 try {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {}
-                nextState = stateDefinition.PROPHET_APPEAR;
+                nextState = StateDefinition.PROPHET_APPEAR;
                 break;
             }
 
@@ -129,7 +143,7 @@ public class GameState {
                 try {
                     TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException ignored) {}
-                nextState = stateDefinition.PROPHET_VANISH;
+                nextState = StateDefinition.PROPHET_VANISH;
                 break;
             }
 
@@ -138,7 +152,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.WITCH_APPEAR;
+                nextState = StateDefinition.WITCH_APPEAR;
                 break;
             }
 
@@ -147,7 +161,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(20);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.WITCH_VANISH;
+                nextState = StateDefinition.WITCH_VANISH;
                 break;
             }
 
@@ -156,7 +170,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.HUNTER_APPEAR;
+                nextState = StateDefinition.HUNTER_APPEAR;
                 break;
             }
 
@@ -165,7 +179,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.HUNTER_VANISH;
+                nextState = StateDefinition.HUNTER_VANISH;
                 break;
             }
 
@@ -176,16 +190,16 @@ public class GameState {
                 }
 
                 if(incomingSnapshot.needApplySheriff()) {
-                    nextState = stateDefinition.DAY_START;
+                    nextState = StateDefinition.DAY_START;
                 }
                 else {
-                    nextState = stateDefinition.NIGHT_RESULT;
+                    nextState = StateDefinition.NIGHT_RESULT;
                 }
                 break;
             }
 
             case DAY_START: {
-                nextState = stateDefinition.APPLY_SHERIFF;
+                nextState = StateDefinition.APPLY_SHERIFF;
                 break;
             }
 
@@ -194,7 +208,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.VOTE_FOR_APPLY_SHERIFF;
+                nextState = StateDefinition.VOTE_FOR_APPLY_SHERIFF;
                 break;
             }
 
@@ -204,7 +218,7 @@ public class GameState {
                 } catch (InterruptedException ignored) {
                 }
 
-                nextState = stateDefinition.SHERIFF_CANDIDATE_RESULT;
+                nextState = StateDefinition.SHERIFF_CANDIDATE_RESULT;
                 ArrayList<Integer> campaignPlayers = incomingSnapshot.getApplySheriffID();
                 String resultMessage = "";
                 for(int campaignID : campaignPlayers) {
@@ -219,7 +233,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.SHERIFF_CANDIDATE_SPEECH;
+                nextState = StateDefinition.SHERIFF_CANDIDATE_SPEECH;
                 break;
             }
 
@@ -230,7 +244,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.VOTE_FOR_SHERIFF;
+                nextState = StateDefinition.VOTE_FOR_SHERIFF;
                 break;
             }
 
@@ -239,13 +253,13 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.SHERIFF_RESULT;
+                nextState = StateDefinition.SHERIFF_RESULT;
                 nextState.setMessage(nextState.getMessage() + String.valueOf(incomingSnapshot.getSheriffID()) + "号玩家");
                 break;
             }
 
             case SHERIFF_RESULT: {
-                nextState = stateDefinition.NIGHT_RESULT;
+                nextState = StateDefinition.NIGHT_RESULT;
                 ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
                 ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
                 newDeadPlayers.removeAll(oldDeadPlayers);
@@ -260,7 +274,7 @@ public class GameState {
             }
 
             case NIGHT_RESULT: {
-                nextState = stateDefinition.DAY_SPEECH;
+                nextState = StateDefinition.DAY_SPEECH;
                 break;
             }
 
@@ -271,7 +285,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.VOTE_FOR_DAY_DEATH;
+                nextState = StateDefinition.VOTE_FOR_DAY_DEATH;
                 break;
             }
 
@@ -280,7 +294,7 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(10);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.DAY_RESULT;
+                nextState = StateDefinition.DAY_RESULT;
 
                 ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
                 ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
@@ -296,7 +310,7 @@ public class GameState {
             }
 
             case DAY_RESULT: {
-                nextState = stateDefinition.DEATH_SPEECH;
+                nextState = StateDefinition.DEATH_SPEECH;
                 break;
             }
 
@@ -305,13 +319,14 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(30);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.NIGHT_START;
+                nextState = StateDefinition.NIGHT_START;
                 break;
             }
 
             default: break;
         }
         currentState = nextState;
+        return new GameState(nextState, incomingSnapshot);
     }
 
     @Override
