@@ -1,13 +1,12 @@
 package com.werewolf.models;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.concurrent.TimeUnit;
 
 public class GameState {
-    private GameSnapshot gameSnapshot;
+    private GameSnapshot currentSnapshot;
 
     public enum stateDefinition {
         NIL(""),
@@ -24,7 +23,7 @@ public class GameState {
         PROPHET_VANISH("预言家请闭眼"),
         HUNTER_APPEAR("猎人请睁眼"),
         HUNTER_VANISH("猎人请闭眼"),
-        DAY_START("天亮了,请大家睁眼"),
+        DAY_START("天亮了,大家请睁眼"),
         APPLY_SHERIFF("请大家考虑,是否要上警"),
         VOTE_FOR_APPLY_SHERIFF("要上警的请投票"),
         SHERIFF_CANDIDATE_RESULT("上警的人有"),
@@ -46,17 +45,17 @@ public class GameState {
         public String getMessage() {
             return message;
         }
+
+        public void setMessage(String newMessage) {
+            message = newMessage;
+        }
     }
 
     private stateDefinition currentState;
 
-    GameState(GameSnapshot gameSnapshot) {
-        this.gameSnapshot = gameSnapshot;
+    GameState(GameSnapshot currentSnapshot) {
+        this.currentSnapshot = currentSnapshot;
         currentState = stateDefinition.NIL;
-    }
-
-    public void setGameSnapshot(GameSnapshot gameSnapshot) {
-        this.gameSnapshot = gameSnapshot;
     }
 
     public void initState() {
@@ -69,6 +68,10 @@ public class GameState {
 
     public String getStateMessage(stateDefinition currentState) {
         return currentState.getMessage();
+    }
+
+    public void setCurrentSnapshot(GameSnapshot currentSnapshot) {
+        this.currentSnapshot = currentSnapshot;
     }
 
     public void transfer(GameSnapshot incomingSnapshot) {
@@ -175,7 +178,138 @@ public class GameState {
                     TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException ignored) {
                 }
-                nextState = stateDefinition.DAY_START;
+
+                if(incomingSnapshot.needApplySheriff()) {
+                    nextState = stateDefinition.DAY_START;
+                }
+                else {
+                    nextState = stateDefinition.NIGHT_RESULT;
+                }
+                break;
+            }
+
+            case DAY_START: {
+                nextState = stateDefinition.APPLY_SHERIFF;
+                break;
+            }
+
+            case APPLY_SHERIFF: {
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.VOTE_FOR_APPLY_SHERIFF;
+                break;
+            }
+
+            case VOTE_FOR_APPLY_SHERIFF: {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
+
+                nextState = stateDefinition.SHERIFF_CANDIDATE_RESULT;
+                ArrayList<Integer> campaignPlayers = incomingSnapshot.getApplySheriffID();
+                String resultMessage = "";
+                for(int campaignID : campaignPlayers) {
+                    resultMessage += String.valueOf(campaignID);
+                    resultMessage += "号玩家,";
+                }
+                nextState.setMessage(resultMessage);
+            }
+
+            case SHERIFF_CANDIDATE_RESULT: {
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.SHERIFF_CANDIDATE_SPEECH;
+                break;
+            }
+
+            case SHERIFF_CANDIDATE_SPEECH: {
+                try {
+                    int totalAlivePlayerCount = incomingSnapshot.getAlivePlayerCount();
+                    //everyone's speech time is 60s
+                    TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.VOTE_FOR_SHERIFF;
+                break;
+            }
+
+            case VOTE_FOR_SHERIFF: {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.SHERIFF_RESULT;
+                nextState.setMessage(nextState.getMessage() + String.valueOf(incomingSnapshot.getSheriffID()) + "号玩家");
+                break;
+            }
+
+            case SHERIFF_RESULT: {
+                nextState = stateDefinition.NIGHT_RESULT;
+                ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
+                ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
+                newDeadPlayers.removeAll(oldDeadPlayers);
+                String resultMessage = "";
+
+                for(int newDaadPlayerID : newDeadPlayers) {
+                    resultMessage += String.valueOf(newDaadPlayerID);
+                    resultMessage += "号玩家,";
+                }
+                nextState.setMessage(resultMessage);
+                break;
+            }
+
+            case NIGHT_RESULT: {
+                nextState = stateDefinition.DAY_SPEECH;
+                break;
+            }
+
+            case DAY_SPEECH: {
+                try {
+                    int totalAlivePlayerCount = incomingSnapshot.getAlivePlayerCount();
+                    //everyone's speech time is 60s
+                    TimeUnit.SECONDS.sleep(totalAlivePlayerCount *  60);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.VOTE_FOR_DAY_DEATH;
+                break;
+            }
+
+            case VOTE_FOR_DAY_DEATH: {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.DAY_RESULT;
+
+                ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
+                ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
+                newDeadPlayers.removeAll(oldDeadPlayers);
+                String resultMessage = "";
+
+                for(int newDaadPlayerID : newDeadPlayers) {
+                    resultMessage += String.valueOf(newDaadPlayerID);
+                    resultMessage += "号玩家,";
+                }
+                nextState.setMessage(resultMessage);
+                break;
+            }
+
+            case DAY_RESULT: {
+                nextState = stateDefinition.DEATH_SPEECH;
+                break;
+            }
+
+            case DEATH_SPEECH: {
+                try {
+                    TimeUnit.SECONDS.sleep(30);
+                } catch (InterruptedException ignored) {
+                }
+                nextState = stateDefinition.NIGHT_START;
                 break;
             }
 

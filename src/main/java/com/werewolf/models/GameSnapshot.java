@@ -1,5 +1,6 @@
 package com.werewolf.models;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,30 +28,85 @@ public class GameSnapshot {
                 .map(PlayerSnapshot::getActionTarget).distinct().limit(2).count() <= 1;
     }
 
+    //check whether players need to apply sheriff
+    public boolean needApplySheriff() {
+        boolean applySheriff = true;
+        for(PlayerSnapshot playerTemp : playerSnapshots) {
+            if(playerTemp.isSheriff()) {
+                applySheriff= false;
+                break;
+            }
+        }
+        return applySheriff;
+    }
+
+    //get which player are applying sheriff
+    public ArrayList<Integer> getApplySheriffID() {
+        ArrayList<Integer> applySheriffPlayerIDs = new ArrayList<Integer>();
+        for(PlayerSnapshot playerTemp : playerSnapshots) {
+            if(playerTemp.isApplySheriff()) {
+                applySheriffPlayerIDs.add(playerTemp.getSeatID());
+            }
+        }
+        return applySheriffPlayerIDs;
+    }
+
+    //get sheriff id, if return 0 means no sheriff
+    public int getSheriffID() {
+        int sheriffID = 0;
+        for(PlayerSnapshot playerTemp : playerSnapshots) {
+            if(playerTemp.isSheriff()) {
+                sheriffID = playerTemp.getSeatID();
+                break;
+            }
+        }
+        return sheriffID;
+    }
+
+    public int getAlivePlayerCount() {
+        int totalAliveCount = 0;
+        for(PlayerSnapshot playerTemp : playerSnapshots) {
+            if (playerTemp.isPlayerAlive()) {
+                totalAliveCount++;
+            }
+        }
+        return totalAliveCount;
+    }
+
+    public ArrayList<Integer> getDeadPlayer() {
+        ArrayList<Integer> deadPlayerList = new ArrayList<Integer>();
+        for(PlayerSnapshot playerTemp : playerSnapshots) {
+            if (!playerTemp.isPlayerAlive()) {
+                deadPlayerList.add(playerTemp.getSeatID());
+            }
+        }
+        return deadPlayerList;
+    }
+
     public HashMap<String, Integer> getAlivePlayerInfo() {
         HashMap<String, Integer> alivePlayerInfo  = new HashMap<String, Integer>();
         alivePlayerInfo.put("GOD",0);
         alivePlayerInfo.put("WEREWOLF",0);
         alivePlayerInfo.put("VILLAGER",0);
 
-        int tempCount = 0;
+        int godAliveCount, woflAliveCount, villagerAliverCount = 0;
         for(PlayerSnapshot playerTemp : playerSnapshots) {
             if(playerTemp.isPlayerAlive()) {
                 switch(playerTemp.getRole().getType()) {
                     case (0):
-                        tempCount = alivePlayerInfo.get("GOD");
-                        tempCount ++;
-                        alivePlayerInfo.put("GOD", tempCount);
+                        godAliveCount = alivePlayerInfo.get("GOD");
+                        godAliveCount ++;
+                        alivePlayerInfo.put("GOD", godAliveCount);
                         break;
                     case (1):
-                        tempCount = alivePlayerInfo.get("WEREWOLF");
-                        tempCount ++;
-                        alivePlayerInfo.put("WEREWOLF", tempCount);
+                        woflAliveCount = alivePlayerInfo.get("WEREWOLF");
+                        woflAliveCount ++;
+                        alivePlayerInfo.put("WEREWOLF", woflAliveCount);
                         break;
                     case (2):
-                        tempCount = alivePlayerInfo.get("VILLAGER");
-                        tempCount ++;
-                        alivePlayerInfo.put("VILLAGER", tempCount);
+                        villagerAliverCount = alivePlayerInfo.get("VILLAGER");
+                        villagerAliverCount ++;
+                        alivePlayerInfo.put("VILLAGER", villagerAliverCount);
                         break;
                 }
             }

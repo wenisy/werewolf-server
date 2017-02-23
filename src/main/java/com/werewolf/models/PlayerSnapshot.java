@@ -8,10 +8,16 @@ public class PlayerSnapshot {
     private Role role;
     private Integer actionTarget;
     private boolean isAlive;
+    private boolean isSheriff;
+    private int seatID;
+    private boolean isApplySheriff;
 
     public PlayerSnapshot(Player player) {
         this.ready = player.isReady();
         this.isAlive = player.isAlive();
+        this.isSheriff = player.isSheriff();
+        this.seatID = player.getSeatId();
+        this.isApplySheriff = player.isCampaign();
     }
 
     public boolean isReady() {
@@ -28,5 +34,17 @@ public class PlayerSnapshot {
 
     public boolean isPlayerAlive() {
         return isAlive;
+    }
+
+    public boolean isSheriff() {
+        return isSheriff;
+    }
+
+    public int getSeatID() {
+        return seatID;
+    }
+
+    public boolean isApplySheriff() {
+        return isApplySheriff;
     }
 }

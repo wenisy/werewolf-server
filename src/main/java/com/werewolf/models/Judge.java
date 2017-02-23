@@ -15,8 +15,8 @@ public class Judge {
     }
 
     public String next(GameSnapshot nextSnapshot) {
-        currentState.setGameSnapshot(nextSnapshot);
         currentState.transfer(nextSnapshot);
+        currentState.setCurrentSnapshot(nextSnapshot);
         return currentState.getStateMessage(currentState.getCurrentState());
     }
 
