@@ -2,6 +2,7 @@ package com.werewolf.controllers;
 
 import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
+import com.werewolf.models.GameState;
 import com.werewolf.models.Player;
 import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
@@ -61,13 +62,15 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(sessionId);
 
         player.ifPresent(p -> {
+            GameState current = game.getCurrentState();
             p.setReady(isReady);
-            String next = game.checkState();
+            GameState next = game.checkState();
 
             logger.info("Player {} is ready, role is {}, next state is: {}.",
                     p.getSeatId(), p.getRole().getName(), next);
 
-            GameResponseVO response = new GameResponseVO().setMessage(next).setVoice(true);
+            if (current.equals(next)) return;
+            GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage(next.getCurrentState())).setVoice(true);
             String judgeSessionId = game.getJudge();
 
             if (sessionId.equals(judgeSessionId)) {

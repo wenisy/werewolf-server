@@ -4,6 +4,10 @@ public class Judge {
     private String sessionId;
     private GameState currentState;
 
+    public GameState getCurrentState() {
+        return currentState;
+    }
+
     public Judge(GameSnapshot initGameSnapshot, String sessionId) {
         this.sessionId = sessionId;
         this.currentState = new GameState(initGameSnapshot);
@@ -14,10 +18,10 @@ public class Judge {
         currentState.initState();
     }
 
-    public String next(GameSnapshot nextSnapshot) {
+    public GameState next(GameSnapshot nextSnapshot) {
         currentState.transfer(nextSnapshot);
         currentState.setCurrentSnapshot(nextSnapshot);
-        return currentState.getStateMessage(currentState.getCurrentState());
+        return currentState;
     }
 
     public Boolean isEnd() {

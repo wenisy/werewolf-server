@@ -1,15 +1,12 @@
 package com.werewolf.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import java.util.concurrent.TimeUnit;
 
 public class GameState {
     private GameSnapshot currentSnapshot;
 
     public enum stateDefinition {
-        NIL(""),
         INIT("游戏创建成功"),
         WAITING_PLAYERS("等待更多玩家加入"),
         NIGHT_START("天黑了,请大家闭眼"),
@@ -55,7 +52,6 @@ public class GameState {
 
     GameState(GameSnapshot currentSnapshot) {
         this.currentSnapshot = currentSnapshot;
-        currentState = stateDefinition.NIL;
     }
 
     public void initState() {
@@ -75,7 +71,7 @@ public class GameState {
     }
 
     public void transfer(GameSnapshot incomingSnapshot) {
-        stateDefinition nextState = stateDefinition.NIL;
+        stateDefinition nextState = currentState;
         switch (currentState) {
             case INIT: {
                 if(incomingSnapshot.playersAreReady()) {
@@ -316,5 +312,21 @@ public class GameState {
             default: break;
         }
         currentState = nextState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameState gameState = (GameState) o;
+
+        return currentState == gameState.currentState;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return currentState != null ? currentState.hashCode() : 0;
     }
 }

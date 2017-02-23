@@ -64,7 +64,7 @@ public class Game {
         return players;
     }
 
-    public String checkState() {
+    public GameState checkState() {
         GameSnapshot snapshot = getSnapshot();
 
         return judge.next(snapshot);
@@ -78,5 +78,9 @@ public class Game {
 
     public String getJudge() {
         return judge.getSessionId();
+    }
+
+    public GameState getCurrentState() {
+        return judge.getCurrentState();
     }
 }
