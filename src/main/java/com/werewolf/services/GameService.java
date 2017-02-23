@@ -16,11 +16,11 @@ public class GameService {
         if (gameConfiguration == null) {
             gameConfiguration = new GameConfiguration()
                     .setHasSheriff(true)
-                    .setHunter(1)
+                    .setHunter(0)
                     .setProphet(1)
-                    .setVillager(3)
-                    .setWitch(1)
-                    .setWolf(3);
+                    .setVillager(1)
+                    .setWitch(0)
+                    .setWolf(1);
         }
         Game game = new Game(gameConfiguration);
         gamePool.registerGame(game);

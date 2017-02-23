@@ -6,8 +6,15 @@ import java.util.HashMap;
 public class GameSnapshot {
     private ArrayList<PlayerSnapshot> playerSnapshots;
 
-    public GameSnapshot(ArrayList<PlayerSnapshot> playerSnapshots) {
+    public int getNumberOfEmptySeat() {
+        return numberOfEmptySeat;
+    }
+
+    private int numberOfEmptySeat;
+
+    public GameSnapshot(ArrayList<PlayerSnapshot> playerSnapshots, int numberOfEmptySeat) {
         this.playerSnapshots = playerSnapshots;
+        this.numberOfEmptySeat = numberOfEmptySeat;
     }
 
     public boolean playersAreReady() {

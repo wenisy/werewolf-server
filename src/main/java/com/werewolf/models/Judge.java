@@ -1,7 +1,5 @@
 package com.werewolf.models;
 
-import java.util.HashMap;
-
 public class Judge {
     private GameState currentState;
 

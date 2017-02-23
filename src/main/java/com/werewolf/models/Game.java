@@ -1,5 +1,7 @@
 package com.werewolf.models;
 
+import org.springframework.messaging.simp.annotation.SendToUser;
+
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -58,15 +60,15 @@ public class Game {
         return players;
     }
 
-    public void checkState() {
+    @SendToUser("/queue/judge")
+    public String checkState() {
         GameSnapshot snapshot = getSnapshot();
-        judge.next(snapshot);
+        return judge.next(snapshot);
     }
 
     private GameSnapshot getSnapshot() {
         ArrayList<PlayerSnapshot> playerSnapshots = new ArrayList<>();
-        players.keySet().stream().map(key -> new PlayerSnapshot(players.get(key)))
-                .forEach(playerSnapshot -> playerSnapshots.add(playerSnapshot));
-        return new GameSnapshot(playerSnapshots);
+        players.keySet().stream().map(key -> new PlayerSnapshot(players.get(key))).forEach(playerSnapshots::add);
+        return new GameSnapshot(playerSnapshots, playerQueue.size());
     }
 }

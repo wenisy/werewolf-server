@@ -53,11 +53,11 @@ function joinRoom() {
 
 function createRoom() {
     stompClient.send("/app/create", {}, JSON.stringify({
-        'wolf': 3,
-        'villager': 3,
-        'witch': 1,
+        'wolf': 1,
+        'villager': 1,
+        'witch': 0,
         'prophet': 1,
-        'hunter': 1,
+        'hunter': 0,
         'hasSheriff': true
     }));
 }
