@@ -7,9 +7,11 @@ public class PlayerSnapshot {
     private boolean ready;
     private Role role;
     private Integer actionTarget;
+    private boolean isAlive;
 
     public PlayerSnapshot(Player player) {
         this.ready = player.isReady();
+        this.isAlive = player.isAlive();
     }
 
     public boolean isReady() {
@@ -22,5 +24,9 @@ public class PlayerSnapshot {
 
     public Integer getActionTarget() {
         return actionTarget;
+    }
+
+    public boolean isPlayerAlive() {
+        return isAlive;
     }
 }

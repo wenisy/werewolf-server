@@ -1,12 +1,10 @@
 package com.werewolf.models;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 
-/**
- * Created by ctuo on 2/22/17.
- */
 public class StateRelation {
-  public StateRelation() {
+    public StateRelation() {
 //    STATE_RELATION_MAP = new HashMap<String, String>();
 //    STATE_RELATION_MAP.put("NIGHT_START", "WOLF_APPEAR");
 //    STATE_RELATION_MAP.put("WOLF_APPEAR", "WOLF_KILL");
@@ -19,27 +17,27 @@ public class StateRelation {
 //    STATE_RELATION_MAP.put("HUNTER_APPEAR", "HUNTER_VANISH");
 //    STATE_RELATION_MAP.put("HUNTER_VANISH", "DAY_START");
 
-    currentState = "NIGHT_START";
-  }
-  
-  private HashMap<String, String> STATE_RELATION_MAP;
-  private String currentState;
+        currentState = "NIGHT_START";
+    }
 
-  public void setInitState() {
-    this.currentState = "NIGHT_START";
-  }
+    private HashMap<String, String> STATE_RELATION_MAP;
+    private String currentState;
 
-  public void setCurrentState(String currentState) {
-    this.currentState = currentState;
-  }
+    public void setInitState() {
+        this.currentState = "NIGHT_START";
+    }
 
-  public String getCurrentState() {
-    return this.currentState;
-  }
+    public void setCurrentState(String currentState) {
+        this.currentState = currentState;
+    }
 
-  public String goNextState(String previousState) {
-    currentState = STATE_RELATION_MAP.get(previousState);
-    return currentState;
-  }
+    public String getCurrentState() {
+        return this.currentState;
+    }
+
+    public String goNextState(String previousState) {
+        currentState = STATE_RELATION_MAP.get(previousState);
+        return currentState;
+    }
 
 }
