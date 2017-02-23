@@ -2,6 +2,8 @@ package com.werewolf.models;
 
 import com.werewolf.controllers.GameMessageBroker;
 import com.werewolf.models.response.GameResponseVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 
@@ -12,6 +14,8 @@ import java.util.stream.IntStream;
 import static com.werewolf.models.GameState.StateDefinition.*;
 
 public class Game {
+
+    private final Logger logger = LoggerFactory.getLogger(Game.class);
 
     private Map<Integer, Player> players;
     private String gameId;
@@ -85,12 +89,14 @@ public class Game {
             try {
                 TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException ignored) {}
-            next = judge.next(snapshot);
+            return this.checkState();
         }
         return next;
     }
 
     private void sendNextToJudge(Game game, GameState next) {
+        logger.info("Next state: {}", next.getStateMessage());
+
         GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
         String judgeSessionId = game.getJudge().getSessionId();
 

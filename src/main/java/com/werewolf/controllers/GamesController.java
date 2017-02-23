@@ -60,11 +60,12 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
+            GameState current = game.getCurrentState();
             p.setReady(isReady);
-            GameState next = game.checkState();
+            game.checkState();
 
-            logger.info("Player {} is ready, role is {}, next state is: {}.",
-                    p.getSeatId(), p.getRole().getName(), next.getCurrentState().getMessage());
+            logger.info("Player {} is ready, role is {}.",
+                    p.getSeatId(), p.getRole().getName());
         });
     }
 
