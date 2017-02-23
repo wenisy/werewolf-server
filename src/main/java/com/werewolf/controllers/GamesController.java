@@ -60,7 +60,6 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
-            GameState current = game.getCurrentState();
             p.setReady(isReady);
             game.checkState();
 

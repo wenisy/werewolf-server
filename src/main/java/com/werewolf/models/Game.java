@@ -69,8 +69,8 @@ public class Game {
         return playerQueue;
     }
 
-    public void addPlayer(Integer sessionId, Player player) {
-        players.put(sessionId, player);
+    public void addPlayer(Integer seatNum, Player player) {
+        players.put(seatNum, player);
     }
 
     public Map<Integer, Player> getPlayers() {

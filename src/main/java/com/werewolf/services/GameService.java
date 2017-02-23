@@ -51,7 +51,7 @@ public class GameService {
         }
 
         Role role = generateRoleByType(roleType);
-        Player player = new Player(game, seatId, role);
+        Player player = new Player(game, sessionId, seatId, role);
 
         game.addPlayer(seatId, player);
     }

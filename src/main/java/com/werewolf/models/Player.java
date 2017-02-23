@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class Player {
 
+    private String sessionId;
     private int seatId;
     private boolean ready;
     private boolean alive;
@@ -21,7 +22,8 @@ public class Player {
     @Autowired
     private GameMessageBroker messageBroker;
 
-    public Player(Game game, int seatId, Role role) {
+    public Player(Game game, String sessionId, int seatId, Role role) {
+        this.sessionId = sessionId;
         this.seatId = seatId;
         this.role = role;
         ready = false;
@@ -29,6 +31,14 @@ public class Player {
         campaign = false;
         sheriff = false;
         this.game = game;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public int getSeatId() {
