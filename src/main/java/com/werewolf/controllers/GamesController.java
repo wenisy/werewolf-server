@@ -67,9 +67,11 @@ public class GamesController {
             GameState next = game.checkState();
 
             logger.info("Player {} is ready, role is {}, next state is: {}.",
-                    p.getSeatId(), p.getRole().getName(), next);
+                    p.getSeatId(), p.getRole().getName(), next.getCurrentState().getMessage());
 
             if (current.equals(next)) return;
+
+            logger.info("Game {} start!", gameId);
             GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage(next.getCurrentState())).setVoice(true);
             String judgeSessionId = game.getJudge();
 
