@@ -1,7 +1,5 @@
 package com.werewolf.controllers;
 
-import com.werewolf.GamePool;
-import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
 import com.werewolf.services.GameService;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +21,6 @@ public class GamesController {
     private final Logger logger = LoggerFactory.getLogger(GamesController.class);
 
     @Autowired
-    private GamePool gamePool;
-    @Autowired
     private GameService gameService;
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -33,25 +29,11 @@ public class GamesController {
 
     @MessageMapping("/create")
     @SendToUser("/queue/judge")
-    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
-        String sessionId = accessor.getSessionId();
+    public ResponseEntity<String> createGame(@RequestBody GameConfiguration gameConfiguration) {
+        String gameId = gameService.registerGame(gameConfiguration);
+        logger.info("Create new room {}.", gameId);
 
-        if (gameConfiguration == null) {
-            gameConfiguration = new GameConfiguration();
-            gameConfiguration
-                    .setHasSheriff(true)
-                    .setHunter(1)
-                    .setProphet(1)
-                    .setVillager(3)
-                    .setWitch(1)
-                    .setWolf(3);
-        }
-        Game game = new Game(gameConfiguration);
-        gamePool.registerGame(game);
-
-        logger.info("Create new room {}.", game.getGameId());
-
-        return ResponseEntity.ok().body(game.getGameId());
+        return ResponseEntity.ok().body(gameId);
     }
 
     @MessageMapping("/join")
