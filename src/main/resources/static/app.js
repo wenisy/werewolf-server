@@ -18,7 +18,7 @@ function connectAsJudge() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/queue/judge', function (greeting) {
+        stompClient.subscribe('/user/queue/players', function (greeting) {
             showGreeting(greeting.body);
         });
     });
@@ -65,7 +65,7 @@ function createRoom() {
 function readyToGame() {
     var seatId = 1;
     stompClient.send("/app/players", {}, JSON.stringify({
-        'gameId': $("#room-no").val(),
+        'roomNum': $("#room-no").val(),
         'isReady': true
     }));
 }

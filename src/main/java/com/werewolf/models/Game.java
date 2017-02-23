@@ -1,8 +1,12 @@
 package com.werewolf.models;
 
-import org.springframework.messaging.simp.annotation.SendToUser;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Game {
@@ -12,7 +16,7 @@ public class Game {
     private LinkedList<RoleType> playerQueue = new LinkedList<>();
     private Judge judge;
 
-    public Game(GameConfiguration gameConfiguration) {
+    public Game(GameConfiguration gameConfiguration, String sessionId) {
         char[] digitals = "0123456789".toCharArray();
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
@@ -24,7 +28,7 @@ public class Game {
 
         initPlayerQueue(gameConfiguration);
 
-        judge = new Judge(getSnapshot());
+        judge = new Judge(getSnapshot(), sessionId);
     }
 
     private void initPlayerQueue(GameConfiguration gameConfiguration) {
@@ -60,9 +64,9 @@ public class Game {
         return players;
     }
 
-    @SendToUser("/queue/judge")
     public String checkState() {
         GameSnapshot snapshot = getSnapshot();
+
         return judge.next(snapshot);
     }
 
@@ -70,5 +74,9 @@ public class Game {
         ArrayList<PlayerSnapshot> playerSnapshots = new ArrayList<>();
         players.keySet().stream().map(key -> new PlayerSnapshot(players.get(key))).forEach(playerSnapshots::add);
         return new GameSnapshot(playerSnapshots, playerQueue.size());
+    }
+
+    public String getJudge() {
+        return judge.getSessionId();
     }
 }

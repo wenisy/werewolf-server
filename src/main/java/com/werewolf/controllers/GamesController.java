@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +24,15 @@ public class GamesController {
     @Autowired
     private GameService gameService;
     @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
-
-    ExecutorService executor = Executors.newSingleThreadExecutor();
+    private SimpMessagingTemplate messagingTemplate;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @MessageMapping("/create")
-    @SendToUser("/queue/judge")
+    @SendToUser("/queue/players")
     @ResponseBody
-    public GameResponseVO createGame(@RequestBody GameConfiguration gameConfiguration) {
-        String roomNum = gameService.registerGame(gameConfiguration);
+    public GameResponseVO createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
+        String sessionId = accessor.getSessionId();
+        String roomNum = gameService.registerGame(gameConfiguration, sessionId);
         logger.info("Create new room {}.", roomNum);
 
         return new GameResponseVO().setRoomNum(roomNum);

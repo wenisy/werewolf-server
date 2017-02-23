@@ -39,7 +39,6 @@ public class Player {
 
     public void setReady(boolean ready) {
         this.ready = ready;
-        game.checkState();
     }
 
     public boolean isAlive() {

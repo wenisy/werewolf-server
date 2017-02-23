@@ -12,7 +12,7 @@ public class GameService {
     @Autowired
     private GamePool gamePool;
 
-    public String registerGame(GameConfiguration gameConfiguration) {
+    public String registerGame(GameConfiguration gameConfiguration, String sessionId) {
         if (gameConfiguration == null) {
             gameConfiguration = new GameConfiguration()
                     .setHasSheriff(true)
@@ -22,7 +22,7 @@ public class GameService {
                     .setWitch(0)
                     .setWolf(1);
         }
-        Game game = new Game(gameConfiguration);
+        Game game = new Game(gameConfiguration, sessionId);
         gamePool.registerGame(game);
         return game.getGameId();
     }
