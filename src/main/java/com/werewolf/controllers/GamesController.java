@@ -52,12 +52,12 @@ public class GamesController {
 
     @MessageMapping(value = "/players")
     public void readyToGame(@RequestBody String body, SimpMessageHeaderAccessor accessor) {
-        String sessionId = accessor.getSessionId();
+        Integer seatNum = Integer.valueOf(new JSONObject(body).getString("seatNum"));
         String gameId = new JSONObject(body).getString("roomNum");
         Boolean isReady = new JSONObject(body).getBoolean("isReady");
 
         Game game = gameService.getGameById(gameId);
-        Optional<Player> player = game.getPlayerById(sessionId);
+        Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
             GameState current = game.getCurrentState();
@@ -73,13 +73,13 @@ public class GamesController {
 
     @MessageMapping("/play")
     public void play(@RequestBody String body, SimpMessageHeaderAccessor accessor){
-        String sessionId = accessor.getSessionId();
+        Integer seatNum = Integer.valueOf(new JSONObject(body).getString("seatNum"));
         String gameId = new JSONObject(body).getString("roomNum");
         String action = new JSONObject(body).getString("action");
         int seatId = new JSONObject(body).getInt("target");
 
         Game game = gameService.getGameById(gameId);
-        Optional<Player> player = game.getPlayerById(sessionId);
+        Optional<Player> player = game.getPlayerById(seatNum);
 
         Map<String, Object> param = new HashMap<>();
         param.put("Player", game.getPlayerBySeatId(seatId));

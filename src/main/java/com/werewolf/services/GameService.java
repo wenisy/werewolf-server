@@ -37,19 +37,23 @@ public class GameService {
 
         if (playerQueue.isEmpty()) {
             return "角色分配完毕";
-        } else if(game.getPlayers().containsKey(sessionId)) {
+        } else if(game.getPlayers().containsKey(seatId)) {
             return "您已加入该房间，请勿重新加入";
         }
         RoleType roleType = playerQueue.poll();
-        addPlayer(game, roleType, sessionId, seatId);
+        addPlayer(game, roleType, seatId, sessionId);
         return roleType.getType();
     }
 
-    private void addPlayer(Game game, RoleType roleType, String sessionId, Integer seatId) {
+    private void addPlayer(Game game, RoleType roleType, Integer seatId, String sessionId) {
+        if(game.getJudge().getSessionId().equals(sessionId)) {
+            game.getJudge().setSeatNum(seatId);
+        }
+
         Role role = generateRoleByType(roleType);
         Player player = new Player(game, seatId, role);
 
-        game.addPlayer(sessionId, player);
+        game.addPlayer(seatId, player);
     }
 
     private Role generateRoleByType(RoleType roleType) {

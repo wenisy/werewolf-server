@@ -13,7 +13,7 @@ import static com.werewolf.models.GameState.StateDefinition.*;
 
 public class Game {
 
-    private Map<String, Player> players;
+    private Map<Integer, Player> players;
     private String gameId;
     private LinkedList<RoleType> playerQueue = new LinkedList<>();
     private Judge judge;
@@ -50,9 +50,9 @@ public class Game {
         Collections.shuffle(playerQueue);
     }
 
-    public Optional<Player> getPlayerById(String sessionId) {
-        if(players.containsKey(sessionId)) {
-            return Optional.of(players.get(sessionId));
+    public Optional<Player> getPlayerById(Integer seatNum) {
+        if(players.containsKey(seatNum)) {
+            return Optional.of(players.get(seatNum));
         }
         return Optional.empty();
     }
@@ -73,11 +73,11 @@ public class Game {
         return playerQueue;
     }
 
-    public void addPlayer(String sessionId, Player player) {
+    public void addPlayer(Integer sessionId, Player player) {
         players.put(sessionId, player);
     }
 
-    public Map<String, Player> getPlayers() {
+    public Map<Integer, Player> getPlayers() {
         return players;
     }
 
@@ -100,7 +100,7 @@ public class Game {
 
     private void sendNextToJudge(Game game, GameState next) {
         GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
-        String judgeSessionId = game.getJudge();
+        String judgeSessionId = game.getJudge().getSessionId();
 
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
         headerAccessor.setSessionId(judgeSessionId);
@@ -114,8 +114,12 @@ public class Game {
         return new GameSnapshot(playerSnapshots, playerQueue.size());
     }
 
-    public String getJudge() {
-        return judge.getSessionId();
+    public Judge getJudge() {
+        return judge;
+    }
+
+    public Integer getJudgeSeatNum() {
+        return judge.getSeatNum();
     }
 
     public GameState getCurrentState() {

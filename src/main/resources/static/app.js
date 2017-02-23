@@ -46,7 +46,7 @@ function disconnect() {
 
 function joinRoom() {
     stompClient.send("/app/join", {}, JSON.stringify({
-        'seatNum': "123",
+        'seatNum': $("#seat-no").val(),
         'roomNum': $("#room-no").val()
     }));
 }
@@ -63,8 +63,8 @@ function createRoom() {
 }
 
 function readyToGame() {
-    var seatId = 1;
     stompClient.send("/app/players", {}, JSON.stringify({
+        'seatNum': $("#seat-no").val(),
         'roomNum': $("#room-no").val(),
         'isReady': true
     }));

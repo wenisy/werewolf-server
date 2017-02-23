@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class Judge {
     private String sessionId;
+    private Integer seatNum;
     private GameState currentState;
 
     private final Logger logger = LoggerFactory.getLogger(Judge.class);
@@ -37,5 +38,13 @@ public class Judge {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public Integer getSeatNum() {
+        return seatNum;
+    }
+
+    public void setSeatNum(Integer seatNum) {
+        this.seatNum = seatNum;
     }
 }
