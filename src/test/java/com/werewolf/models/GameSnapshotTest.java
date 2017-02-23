@@ -30,9 +30,10 @@ public class GameSnapshotTest {
 
     @Test
     public void needApplySheriff() throws Exception {
-        when(playerSnapshot1.isSheriff()).thenReturn(true);
+        when(playerSnapshot1.isSheriff()).thenReturn(false);
         when(playerSnapshot2.isSheriff()).thenReturn(false);
-        assertEquals(false, gameSnapshot.needApplySheriff());
+
+        assertEquals(true, gameSnapshot.needApplySheriff());
         //assertEquals(judgeTriangle.getIsoscelesTriangle(),judgeTriangle.judgeType(2, 2, 3));
     }
 
@@ -46,6 +47,33 @@ public class GameSnapshotTest {
 
         assertEquals(expectedResults, gameSnapshot.getApplySheriffID());
         //assertEquals(judgeTriangle.getIsoscelesTriangle(),judgeTriangle.judgeType(2, 2, 3));
+    }
+
+    @Test
+    public void getSheriffIDTest() throws Exception {
+        when(playerSnapshot1.isSheriff()).thenReturn(false);
+        when(playerSnapshot2.isSheriff()).thenReturn(true);
+
+        assertEquals(2, gameSnapshot.getSheriffID());
+    }
+
+    @Test
+    public void getAlivePlayerCountTest() throws Exception {
+        when(playerSnapshot1.isPlayerAlive()).thenReturn(false);
+        when(playerSnapshot2.isPlayerAlive()).thenReturn(false);
+
+        assertEquals(0, gameSnapshot.getAlivePlayerCount());
+    }
+
+
+    @Test
+    public void getDeadPlayerTest() throws Exception {
+        when(playerSnapshot1.isPlayerAlive()).thenReturn(false);
+        when(playerSnapshot2.isPlayerAlive()).thenReturn(false);
+        ArrayList<Integer> expectedResults = new ArrayList<Integer>();
+        expectedResults.add(1);
+        expectedResults.add(2);
+        assertEquals(expectedResults, gameSnapshot.getDeadPlayer());
     }
 
     @After

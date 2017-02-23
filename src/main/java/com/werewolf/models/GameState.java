@@ -13,7 +13,7 @@ public class GameState {
     public enum StateDefinition {
         INIT("游戏创建成功"),
         WAITING_PLAYERS("等待更多玩家加入"),
-        NIGHT_START("天黑了,请大家闭眼"),
+        NIGHT_START("天黑了,大家请闭眼"),
         WOLF_APPEAR("狼人请睁眼"),
         WOLF_KILL("狼人请杀人,给我一个座位号"),
         WOLF_UNIFY_OPINION("狼人请统一意见"),
