@@ -1,8 +1,5 @@
 package com.werewolf.models;
 
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +63,7 @@ public class Player {
     }
 
     public void setSheriff(boolean sheriff) {
-        this.sheriff = sheriff;
+        this.sheriff = true;
     }
 
     public Role getRole() {
