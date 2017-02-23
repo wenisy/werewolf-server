@@ -14,7 +14,7 @@ public class Prophet extends Role {
     public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
         Player player = (Player)param.get("Player");
 
-        if(1 == player.getRole().getType()){
+        if(WEREWOLF == player.getRole().getType()){
             executeResult.put("ActionResult", "isWerewolf");
             executeResult.put("TargetSeatId", player.getSeatId());
         }else{
