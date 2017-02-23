@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PlayersController {
+    private final Logger logger = LoggerFactory.getLogger(PlayersController.class);
 
     @Autowired
     private GamePool gamePool;
@@ -31,6 +34,9 @@ public class PlayersController {
 
         Optional<Player> player = gamePool.getGameById(gameId).getPlayerById(sessionId);
 
-        player.ifPresent(p -> p.setReady(isReady));
+        player.ifPresent(p -> {
+            logger.info("Player {} is ready, role is {}.", p.getSeatId(), p.getRole().getName());
+            p.setReady(isReady);
+        });
     }
 }
