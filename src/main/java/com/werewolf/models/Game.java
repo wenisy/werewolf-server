@@ -1,17 +1,32 @@
 package com.werewolf.models;
 
 import com.werewolf.controllers.GameMessageBroker;
+import static com.werewolf.models.GameState.StateDefinition.APPLY_SHERIFF;
+import static com.werewolf.models.GameState.StateDefinition.DAY_RESULT;
+import static com.werewolf.models.GameState.StateDefinition.DAY_START;
+import static com.werewolf.models.GameState.StateDefinition.HUNTER_VANISH;
+import static com.werewolf.models.GameState.StateDefinition.INIT;
+import static com.werewolf.models.GameState.StateDefinition.NIGHT_RESULT;
+import static com.werewolf.models.GameState.StateDefinition.NIGHT_START;
+import static com.werewolf.models.GameState.StateDefinition.PROPHET_VANISH;
+import static com.werewolf.models.GameState.StateDefinition.SHERIFF_CANDIDATE_RESULT;
+import static com.werewolf.models.GameState.StateDefinition.SHERIFF_RESULT;
+import static com.werewolf.models.GameState.StateDefinition.WITCH_VANISH;
+import static com.werewolf.models.GameState.StateDefinition.WOLF_APPEAR;
+import static com.werewolf.models.GameState.StateDefinition.WOLF_VANISH;
 import com.werewolf.models.response.GameResponseVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageType;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
-
-import static com.werewolf.models.GameState.StateDefinition.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Game {
 
@@ -83,7 +98,7 @@ public class Game {
         GameState next = judge.next(snapshot);
 
         if (current.equals(next)) return next;
-        sendNextToJudge(this, next);
+        processNextState(this, next);
 
         if (Arrays.asList(autoTransferStates).contains(next.getCurrentState())) {
             try {
@@ -94,16 +109,15 @@ public class Game {
         return next;
     }
 
-    private void sendNextToJudge(Game game, GameState next) {
+    private void processNextState(Game game, GameState next) {
         logger.info("Next state: {}", next.getStateMessage());
 
-        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
-        String judgeSessionId = game.getJudge().getSessionId();
+        if (next.getCurrentState().equals(GameState.StateDefinition.WOLF_KILL)) {
 
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setSessionId(judgeSessionId);
-        headerAccessor.setLeaveMutable(true);
-        messageBroker.sendMessage(headerAccessor, response);
+        }
+
+        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+        messageBroker.sendMessageToJudge(game.getJudge().getSessionId(), response);
     }
 
     private GameSnapshot getSnapshot() {

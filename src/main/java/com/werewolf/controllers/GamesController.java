@@ -34,7 +34,7 @@ public class GamesController {
         String roomNum = gameService.registerGame(gameConfiguration, sessionId);
         logger.info("Create new room {}.", roomNum);
 
-        gameMessageBroker.sendMessage(accessor, new GameResponseVO().setRoomNum(roomNum));
+        gameMessageBroker.sendMessageToJudge(sessionId, new GameResponseVO().setRoomNum(roomNum));
     }
 
     @MessageMapping("/join")
@@ -47,7 +47,7 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        gameMessageBroker.sendMessage(accessor, new GameResponseVO().setRole(roleName));
+        gameMessageBroker.sendMessageToJudge(sessionId, new GameResponseVO().setRole(roleName));
     }
 
     @MessageMapping(value = "/players")
