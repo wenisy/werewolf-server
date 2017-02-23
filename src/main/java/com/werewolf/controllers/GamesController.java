@@ -6,20 +6,18 @@ import com.werewolf.models.GameState;
 import com.werewolf.models.Player;
 import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class GamesController {
@@ -27,8 +25,6 @@ public class GamesController {
 
     @Autowired
     private GameService gameService;
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
     @Autowired
     private GameMessageBroker gameMessageBroker;
 
