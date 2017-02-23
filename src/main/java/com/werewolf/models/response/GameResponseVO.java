@@ -2,7 +2,7 @@ package com.werewolf.models.response;
 
 public class GameResponseVO {
     private String roomNum;
-    private String roleName;
+    private String role;
     private String message;
     private Boolean voice;
     private Boolean daylight;
@@ -10,19 +10,19 @@ public class GameResponseVO {
 
     public GameResponseVO() {
         roomNum = "";
-        roleName = "";
+        role = "";
         message = "";
         voice = false;
         daylight = false;
         alive = true;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getRole() {
+        return role;
     }
 
-    public GameResponseVO setRoleName(String roleName) {
-        this.roleName = roleName;
+    public GameResponseVO setRole(String role) {
+        this.role = role;
         return this;
     }
 

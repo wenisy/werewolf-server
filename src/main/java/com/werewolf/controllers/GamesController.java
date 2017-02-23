@@ -53,7 +53,7 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        GameResponseVO response = new GameResponseVO().setRoleName(roleName);
+        GameResponseVO response = new GameResponseVO().setRole(roleName);
         messagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/queue/players",
