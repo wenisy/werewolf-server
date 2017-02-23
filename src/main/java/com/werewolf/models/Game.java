@@ -32,14 +32,26 @@ public class Game {
 
     private final Logger logger = LoggerFactory.getLogger(Game.class);
 
-    private Map<Integer, Player> players;
-    private String gameId;
-    private LinkedList<RoleType> playerQueue = new LinkedList<>();
-    private Judge judge;
     private GameState.StateDefinition[] autoTransferStates  = {INIT, NIGHT_START, WOLF_APPEAR, WOLF_VANISH, WITCH_VANISH,
             PROPHET_VANISH, HUNTER_VANISH, DAY_START, APPLY_SHERIFF, SHERIFF_CANDIDATE_RESULT, SHERIFF_RESULT,
             NIGHT_RESULT, DAY_RESULT
     };
+
+    private Map<Integer, Player> players;
+    private LinkedList<RoleType> playerQueue = new LinkedList<>();
+
+    private String gameId;
+    private Judge judge;
+
+    public boolean isDayLight() {
+        return dayLight;
+    }
+
+    public void setDayLight(boolean dayLight) {
+        this.dayLight = dayLight;
+    }
+
+    private boolean dayLight;
 
     private GameMessageBroker messageBroker;
 
@@ -53,6 +65,7 @@ public class Game {
         }
         this.gameId = builder.toString();
         this.players = new HashMap<>();
+        this.dayLight = true;
 
         initPlayerQueue(gameConfiguration);
 

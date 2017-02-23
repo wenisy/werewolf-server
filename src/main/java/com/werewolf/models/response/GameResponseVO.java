@@ -1,5 +1,8 @@
 package com.werewolf.models.response;
 
+import com.werewolf.models.Game;
+import com.werewolf.models.Player;
+
 public class GameResponseVO {
     private String roomNum;
     private String role;
@@ -7,6 +10,20 @@ public class GameResponseVO {
     private Boolean voice;
     private Boolean daylight;
     private Boolean alive;
+
+    public static GameResponseVO getVO(Integer seatId, Game game){
+        return GameResponseVO.getVO(game)
+                .setVoice(game.getPlayerById(seatId).map(Player::isJudge).orElseGet(() -> false));
+    }
+
+    public static GameResponseVO getVO(Game game) {
+        GameResponseVO responseVO = new GameResponseVO();
+        responseVO
+                .setDaylight(game.isDayLight())
+                .setMessage(game.getCurrentState().getStateMessage())
+                .setRoomNum(game.getGameId());
+        return responseVO;
+    }
 
     public GameResponseVO() {
         roomNum = "";

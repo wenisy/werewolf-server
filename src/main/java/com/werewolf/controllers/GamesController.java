@@ -31,10 +31,10 @@ public class GamesController {
     @MessageMapping("/create")
     public void createGame(@RequestBody GameConfiguration gameConfiguration, SimpMessageHeaderAccessor accessor) {
         String sessionId = accessor.getSessionId();
-        String roomNum = gameService.registerGame(gameConfiguration, sessionId);
-        logger.info("Create new room {}.", roomNum);
+        Game game = gameService.registerGame(gameConfiguration, sessionId);
+        logger.info("Create new room {}.", game.getGameId());
 
-        gameMessageBroker.sendMessageToJudge(sessionId, new GameResponseVO().setRoomNum(roomNum));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(game));
     }
 
     @MessageMapping("/join")
@@ -43,11 +43,12 @@ public class GamesController {
         String gameId = new JSONObject(body).get("roomNum").toString();
         Integer seatId = new JSONObject(body).getInt("seatNum");
 
+        Game game = gameService.getGameById(gameId);
         String roleName = gameService.fetchRole(sessionId, gameId, seatId);
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        gameMessageBroker.sendMessageToJudge(sessionId, new GameResponseVO().setRole(roleName));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game));
     }
 
     @MessageMapping(value = "/players")

@@ -17,6 +17,7 @@ public class Player {
     private boolean campaign;
     private boolean sheriff;
     private Role role;
+    private boolean judge;
 
     private Game game;
     @Autowired
@@ -104,4 +105,11 @@ public class Player {
         return skills;
     }
 
+    public boolean isJudge() {
+        return judge;
+    }
+
+    public void setJudge(boolean judge) {
+        this.judge = judge;
+    }
 }

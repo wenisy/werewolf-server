@@ -16,7 +16,7 @@ public class GameService {
     @Autowired
     private GameMessageBroker messageBroker;
 
-    public String registerGame(GameConfiguration gameConfiguration, String sessionId) {
+    public Game registerGame(GameConfiguration gameConfiguration, String sessionId) {
         if (gameConfiguration == null) {
             gameConfiguration = new GameConfiguration()
                     .setHasSheriff(true)
@@ -28,7 +28,7 @@ public class GameService {
         }
         Game game = new Game(gameConfiguration, sessionId, messageBroker);
         gamePool.registerGame(game);
-        return game.getGameId();
+        return game;
     }
 
     public String fetchRole(String sessionId, String gameId, Integer seatId) {
