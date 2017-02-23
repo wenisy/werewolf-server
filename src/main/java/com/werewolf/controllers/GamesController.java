@@ -60,14 +60,11 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
-            GameState current = game.getCurrentState();
             p.setReady(isReady);
             GameState next = game.checkState();
 
             logger.info("Player {} is ready, role is {}, next state is: {}.",
                     p.getSeatId(), p.getRole().getName(), next.getCurrentState().getMessage());
-
-
         });
     }
 
@@ -82,13 +79,13 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         Map<String, Object> param = new HashMap<>();
-        param.put("Player", game.getPlayerBySeatId(seatId));
+        param.put("Player", game.getPlayerById(seatId));
         param.put("Action", action.split(":")[1]);
 
         player.ifPresent(p -> {
             GameState current = game.getCurrentState();
             Map<String, Object> actionResult = p.getRole().executeSpecialAction(param);
-            Player target = game.getPlayerBySeatId((int)actionResult.get("TargetSeatId")).get();
+            Player target = game.getPlayerById((int)actionResult.get("TargetSeatId")).get();
             switch((String)actionResult.get("ActionResult")){
                 case "kill":
                     target.setAlive(false);
