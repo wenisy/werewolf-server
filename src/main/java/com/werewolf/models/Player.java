@@ -1,5 +1,9 @@
 package com.werewolf.models;
 
+
+import com.werewolf.controllers.GameMessageBroker;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,8 @@ public class Player {
     private Role role;
 
     private Game game;
+    @Autowired
+    private GameMessageBroker messageBroker;
 
     public Player(Game game, int seatId, Role role) {
         this.seatId = seatId;

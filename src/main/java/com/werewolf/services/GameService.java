@@ -73,4 +73,8 @@ public class GameService {
         }
         return role;
     }
+
+    public Game getGameById(String gameId) {
+        return gamePool.getGameById(gameId);
+    }
 }
