@@ -37,7 +37,6 @@ public class Game {
 
     public Optional<Player> getPlayerById(String sessionId) {
         if(players.containsKey(sessionId)) {
-            System.out.println("hahaha");
             return Optional.of(players.get(sessionId));
         }
         return Optional.empty();
