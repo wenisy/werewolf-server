@@ -85,22 +85,11 @@ public class GamesController {
 
         player.ifPresent(p -> {
             GameState current = game.getCurrentState();
-            Map<String, Object> actionResult = p.getRole().executeSpecialAction(param);
-            Player target = game.getPlayerById((int)actionResult.get("TargetSeatId")).get();
-            switch((String)actionResult.get("ActionResult")){
-                case "kill":
-                    target.setAlive(false);
-                    break;
-                case "saved":
-                    target.setAlive(true);
-                    break;
-                default:
-                    break;
-            }
+
+            String info = gameService.doAction(p, param);
 
             GameState next = game.checkState();
-
-            logger.info("Player {} is killed.",target.getSeatId());
+            logger.info(info);
         });
     }
 
