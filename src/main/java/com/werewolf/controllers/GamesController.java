@@ -2,7 +2,6 @@ package com.werewolf.controllers;
 
 import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
-import com.werewolf.models.GameState;
 import com.werewolf.models.Player;
 import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
@@ -15,8 +14,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -79,17 +76,12 @@ public class GamesController {
         Game game = gameService.getGameById(gameId);
         Optional<Player> player = game.getPlayerById(seatNum);
 
-        Map<String, Object> param = new HashMap<>();
-        param.put("Player", game.getPlayerById(target));
-        param.put("Action", action.split(":")[1]);
-
         player.ifPresent(p -> {
-            GameState current = game.getCurrentState();
+            Player targetPlayer = game.getPlayerById(target).orElse(p);
 
-            String info = gameService.doAction(game, p, param);
+            p.doAction(action, targetPlayer);
 
-            GameState next = game.checkState();
-            logger.info(info);
+            game.checkState();
         });
     }
 

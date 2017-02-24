@@ -2,13 +2,13 @@ package com.werewolf.models;
 
 
 import com.werewolf.controllers.GameMessageBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Player {
+
+    private final Logger logger = LoggerFactory.getLogger(Player.class);
 
     private String sessionId;
     private int seatId;
@@ -17,6 +17,8 @@ public class Player {
     private boolean campaign;
     private boolean sheriff;
     private Role role;
+    private boolean actionDone;
+    private int actionTarget;
 
     private Game game;
     @Autowired
@@ -31,6 +33,15 @@ public class Player {
         campaign = false;
         sheriff = false;
         this.game = game;
+        this.actionDone = false;
+        this.actionTarget = 0;
+    }
+
+    public void doAction(String action, Player target) {
+        this.actionTarget = target.getSeatId();
+        this.role.getAction(action).apply(target);
+        logger.info("Player {} did {} to player {}", seatId, action, target.getSeatId());
+        this.actionDone = true;
     }
 
     public String getSessionId() {
@@ -101,4 +112,16 @@ public class Player {
         return this.sessionId.equals(game.getJudge().getSessionId());
     }
 
+    public int getActionTarget() {
+        return actionTarget;
+    }
+
+    public boolean isActionDone() {
+        return actionDone;
+    }
+
+    public void resetAction() {
+        this.actionTarget = 0;
+        this.actionDone = false;
+    }
 }

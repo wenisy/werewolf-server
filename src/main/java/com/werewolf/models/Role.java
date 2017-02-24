@@ -55,4 +55,7 @@ abstract public class Role {
 
     }
 
+    public Function<Player, ?> getAction(String action) {
+        return this.actionMap.get(action);
+    }
 }
