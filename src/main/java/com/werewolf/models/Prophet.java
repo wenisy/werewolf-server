@@ -7,7 +7,7 @@ import java.util.Map;
 public class Prophet extends Role {
 
     private int type = GOD;
-    private static String name = "Prophet";
+    private static String name = "prophet";
 
     public Prophet() {
         super();
