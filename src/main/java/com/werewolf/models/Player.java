@@ -89,18 +89,11 @@ public class Player {
         this.role = role;
     }
 
-
-    public Map<Integer, Integer> vote(int seatId){
-        Map<Integer, Integer> voteResult = new HashMap<>();
-        voteResult.put(this.getSeatId(), seatId);
-        return voteResult;
-    }
-
-    public List<String> skills(){
-        List<String> skills = this.getRole().getSkills();
-        if(isCampaign()){
-            skills.remove("voteForCampaign");
+    public String[] skills(){
+        if(this.isCampaign()){
+            this.getRole().getActionMap().remove("vote");
         }
+        String[] skills = (String[]) this.getRole().getActionMap().keySet().toArray();
         return skills;
     }
 

@@ -87,23 +87,21 @@ public class GameService {
         return gamePool.getGameById(gameId);
     }
 
-    public String doAction(Player player,Map<String, Object> param){
+    public String doAction(Game game, Player player,Map<String, Object> param){
 
-        Map<String, Object> actionResult = player.getRole().executeAction(param);
-        Player target = (Player)actionResult.get("Object");
+        Map<String, String> actionResult = game.getActionResultMap();
+        Map<String, Object> playerActionResult = player.getRole().executeAction(param);
+        Player target = (Player)playerActionResult.get("Object");
 
-        switch ((String)actionResult.get("Action")) {
+        switch ((String)playerActionResult.get("Action")) {
             case "vote":
-                actionResult.put("SourceSeatId", player.getSeatId());
-                return String.format("Player {} votes to player {}", player.getSeatId(), target.getSeatId());
-            case "campaign":
-                if (player.getSeatId() != target.getSeatId()) {
-                    actionResult.put("Object", player);
-                    target = (Player) actionResult.get("Object");
-                }
-                return String.format("Player {} campaign for sheriff.", target.getSeatId());
+                actionResult.put("Action","vote");
+                actionResult.put("CurrentPlayer", String.valueOf(player.getSeatId()));
+                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
+                game.setActionResultMap(actionResult);
             case "kill":
-                return String.format("Player {} is dead.", target.getSeatId());
+                actionResult.put("Action", "kill");
+                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
             default:
                 break;
         }

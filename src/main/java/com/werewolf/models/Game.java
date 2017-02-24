@@ -42,6 +42,7 @@ public class Game {
 
     private String gameId;
     private Judge judge;
+    private Map<String , String> actionResultMap = new HashMap<>();
 
     public boolean isDayLight() {
         return dayLight;
@@ -103,6 +104,14 @@ public class Game {
 
     public Map<Integer, Player> getPlayers() {
         return players;
+    }
+
+    public Map<String, String> getActionResultMap() {
+        return actionResultMap;
+    }
+
+    public void setActionResultMap(Map<String, String> actionResultMap) {
+        this.actionResultMap = actionResultMap;
     }
 
     public GameState checkState() {

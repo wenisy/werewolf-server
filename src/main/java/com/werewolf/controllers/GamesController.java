@@ -74,19 +74,19 @@ public class GamesController {
         Integer seatNum = Integer.valueOf(new JSONObject(body).getString("seatNum"));
         String gameId = new JSONObject(body).getString("roomNum");
         String action = new JSONObject(body).getString("action");
-        int seatId = new JSONObject(body).getInt("target");
+        int target = new JSONObject(body).getInt("target");
 
         Game game = gameService.getGameById(gameId);
         Optional<Player> player = game.getPlayerById(seatNum);
 
         Map<String, Object> param = new HashMap<>();
-        param.put("Player", game.getPlayerById(seatId));
+        param.put("Player", game.getPlayerById(target));
         param.put("Action", action.split(":")[1]);
 
         player.ifPresent(p -> {
             GameState current = game.getCurrentState();
 
-            String info = gameService.doAction(p, param);
+            String info = gameService.doAction(game, p, param);
 
             GameState next = game.checkState();
             logger.info(info);
