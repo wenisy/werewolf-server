@@ -1,14 +1,12 @@
 package com.werewolf.models;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static com.werewolf.models.Category.WOLVES;
 
 
 public class Werewolf extends Role{
-
-    private static String name = "werewolf";
-    private int type = WEREWOLF;
 
     public Werewolf() {
         super();
@@ -18,11 +16,11 @@ public class Werewolf extends Role{
 
     private Map<String, Object> suicide(Player target){
         Map<String, Object> actionResult = new HashMap<>();
-        if(WEREWOLF == target.getRole().getType()) {
+        if(WOLVES == target.getRole().getCategory()) {
             target.setAlive(false);
         }
-        actionResult.put("Action", "suicide");
-        actionResult.put("Object", target);
+//        actionResult.put("Action", "suicide");
+//        actionResult.put("Object", target);
         return actionResult;
     }
 
@@ -32,16 +30,6 @@ public class Werewolf extends Role{
         actionResult.put("Action", "kill");
         actionResult.put("Object", target);
         return actionResult;
-    }
-
-    @Override
-    public int getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
 }

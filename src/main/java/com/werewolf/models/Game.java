@@ -127,9 +127,7 @@ public class Game {
                         messageBroker.sendMessageToPlayer(player.getSessionId(), player.getSeatId(), response);
                     });
         } else if(next.getCurrentState().equals(GameState.StateDefinition.WOLF_VANISH)) {
-            game.getPlayers().entrySet().forEach(entry -> {
-                entry.getValue().doAction();
-            });
+            game.getPlayers().entrySet().forEach(entry -> entry.getValue().doAction());
         }
 
         GameResponseVO response = GameResponseVO.getVO(game.getJudge().getSeatNum(), game);

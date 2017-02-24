@@ -6,12 +6,9 @@ import java.util.function.Function;
 
 abstract public class Role {
 
-    public static int GOD = 0;
-    public static int WEREWOLF = 1;
-    public static int VILLAGER = 2;
+    protected RoleType roleType;
 
     protected Map<String, Function< Player, Map<String, Object>>> actionMap = new HashMap<>();
-    protected Boolean skillComplete = false;
 
     protected Role(){
         this.actionMap.put("vote", (Player target) -> vote(target));
@@ -22,18 +19,17 @@ abstract public class Role {
         return actionMap;
     }
 
-//    public Map<String, Object> executeAction(Map<String, Object> param){
-//        String actionName = (String)param.get("action");
-//        Integer target = (Integer)param.get("target");
-//
-//        Function action = actionMap.get(actionName);
-//
-//        return (Map<String, Object>) action.apply(target);
-//    }
+    public Category getCategory() {
+        return this.roleType.getCategory();
+    }
 
-    abstract public int getType();
+    public String getName() {
+        return this.roleType.getType();
+    }
 
-    abstract public String getName();
+    public Faction getFaction() {
+        return this.roleType.getFaction();
+    }
 
 
     protected Map<String, Object> vote(Player target){
@@ -49,10 +45,6 @@ abstract public class Role {
         actionResult.put("Action", "campaign");
         actionResult.put("Object", target);
         return actionResult;
-    }
-
-    protected void setSkillComplete(){
-
     }
 
     public Function<Player, ?> getAction(String action) {

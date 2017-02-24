@@ -77,7 +77,6 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
-//            Player targetPlayer = game.getPlayerById(target).orElse(p);
             p.predoAction(action, target);
             game.checkState();
         });

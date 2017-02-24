@@ -3,15 +3,16 @@ package com.werewolf.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.werewolf.models.RoleType.HUNTER;
+
 public class Hunter extends Role{
 
-    private int type = GOD;
     private boolean skillStatus = true;
-    private static String name = "hunter";
 
     public Hunter() {
         super();
         this.actionMap.put("revenge", (Player target) -> revenge(target));
+        this.roleType = HUNTER;
     }
 
     public boolean hasSkill() {
@@ -29,16 +30,6 @@ public class Hunter extends Role{
             actionResult.put("kill", target);
         }
         return actionResult;
-    }
-
-    @Override
-    public int getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
 }

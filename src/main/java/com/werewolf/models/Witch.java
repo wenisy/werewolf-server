@@ -4,10 +4,8 @@ import java.util.*;
 
 public class Witch extends Role {
 
-    private int type = GOD;
     private boolean poison = true;
     private boolean antidote = true;
-    private static String name = "witch";
 
     public Witch() {
         super();
@@ -15,9 +13,6 @@ public class Witch extends Role {
         this.actionMap.put("antidote", (Player target)->poison(target));
     }
 
-    public int getType() {
-        return type;
-    }
 
     public boolean hasPoison() {
         return poison;
@@ -25,11 +20,6 @@ public class Witch extends Role {
 
     public boolean hasAntidote() {
         return antidote;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     private Map<String, Object> poison(Player player){

@@ -1,7 +1,5 @@
 package com.werewolf.models;
 
-/**
- * Created by wzhao on 24/02/2017.
- */
 public enum Faction {
+    BAD_GUYS, GOOD_GUYS;
 }
