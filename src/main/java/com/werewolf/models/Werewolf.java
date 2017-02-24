@@ -1,27 +1,37 @@
 package com.werewolf.models;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class Werewolf extends Role{
 
     private static String name = "werewolf";
     private int type = WEREWOLF;
-    private Map<String, Object> executeResult = null;
 
+    public Werewolf() {
+        super();
+        this.actionMap.put("suicide", (Player target) -> suicide(target));
+        this.actionMap.put("kill", (Player target) -> kill(target));
+    }
 
-    @Override
-    public Map<String, Object> executeSpecialAction(Map<String, Object> param) {
-        Player player = (Player)param.get("Player");
-        String action = (String)param.get("Action");
-        if("suicide".equals(action)){
-            executeResult.put("ActionResult", "suicide");
-            executeResult.put("TargetSeatId", player.getSeatId());
-        }else {
-            executeResult.put("ActionResult", "kill");
-            executeResult.put("TargetSeatId", player.getSeatId());
+    private Map<String, Object> suicide(Player target){
+        Map<String, Object> actionResult = new HashMap<>();
+        if(WEREWOLF == target.getRole().getType()) {
+            target.setAlive(false);
         }
-        return executeResult;
+        actionResult.put("Action", "suicide");
+        actionResult.put("Object", target);
+        return actionResult;
+    }
+
+    private Map<String, Object> kill(Player target){
+        Map<String, Object> actionResult = new HashMap<>();
+        target.setAlive(false);
+        actionResult.put("Action", "kill");
+        actionResult.put("Object", target);
+        return actionResult;
     }
 
     @Override
@@ -34,10 +44,4 @@ public class Werewolf extends Role{
         return name;
     }
 
-    @Override
-    public List<String> getSkills() {
-        List<String> skills = super.getSkills();
-        skills.add("suicide");
-        return skills;
-    }
 }

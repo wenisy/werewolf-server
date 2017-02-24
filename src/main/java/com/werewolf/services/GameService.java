@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 @Component
 public class GameService {
@@ -84,5 +85,28 @@ public class GameService {
 
     public Game getGameById(String gameId) {
         return gamePool.getGameById(gameId);
+    }
+
+    public String doAction(Player player,Map<String, Object> param){
+
+        Map<String, Object> actionResult = player.getRole().executeAction(param);
+        Player target = (Player)actionResult.get("Object");
+
+        switch ((String)actionResult.get("Action")) {
+            case "vote":
+                actionResult.put("SourceSeatId", player.getSeatId());
+                return String.format("Player {} votes to player {}", player.getSeatId(), target.getSeatId());
+            case "campaign":
+                if (player.getSeatId() != target.getSeatId()) {
+                    actionResult.put("Object", player);
+                    target = (Player) actionResult.get("Object");
+                }
+                return String.format("Player {} campaign for sheriff.", target.getSeatId());
+            case "kill":
+                return String.format("Player {} is dead.", target.getSeatId());
+            default:
+                break;
+        }
+        return "Nothing was done.";
     }
 }
