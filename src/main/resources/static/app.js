@@ -74,6 +74,15 @@ function showGreeting(message) {
     $("#greetings").append('<tr><td><audio controls="" autoplay="" name="media"><source src=' + encodeURI(message) +' type="audio/mp3">' + '</audio></td></tr>');
 }
 
+function killPeople() {
+    stompClient.send("/app/play", {}, JSON.stringify({
+        'seatNum': $("#seat-no").val(),
+        'roomNum': $("#room-no").val(),
+        'action': 'kill',
+        'target': $("#kill-no").val()
+    }));
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -84,5 +93,6 @@ $(function () {
     $( "#create" ).click(function() { createRoom(); });
     $( "#join" ).click(function() { joinRoom(); });
     $( "#ready" ).click(function() { readyToGame(); });
+    $( "#kill" ).click(function() { killPeople(); });
 });
 

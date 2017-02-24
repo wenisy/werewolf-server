@@ -90,7 +90,7 @@ public class GameService {
     public String doAction(Game game, Player player,Map<String, Object> param){
 
         Map<String, String> actionResult = game.getActionResultMap();
-        Map<String, Object> playerActionResult = player.getRole().executeAction(param);
+        Map<String, Object> playerActionResult =  player.getRole().executeAction(param);
         Player target = (Player)playerActionResult.get("Object");
 
         switch ((String)playerActionResult.get("Action")) {
