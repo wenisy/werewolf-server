@@ -29,7 +29,7 @@ public class GameSnapshotTest {
     }
 
     @Test
-    public void needApplySheriff() throws Exception {
+    public void testNeedApplySheriff() throws Exception {
         when(playerSnapshot1.isSheriff()).thenReturn(false);
         when(playerSnapshot2.isSheriff()).thenReturn(false);
 
@@ -38,7 +38,7 @@ public class GameSnapshotTest {
     }
 
     @Test
-    public void getApplySheriffIDTest() throws Exception {
+    public void testGetApplySheriffID() throws Exception {
         when(playerSnapshot1.isApplySheriff()).thenReturn(true);
         when(playerSnapshot2.isApplySheriff()).thenReturn(true);
         ArrayList<Integer> expectedResults = new ArrayList<Integer>();
@@ -50,7 +50,7 @@ public class GameSnapshotTest {
     }
 
     @Test
-    public void getSheriffIDTest() throws Exception {
+    public void testGetSheriffID() throws Exception {
         when(playerSnapshot1.isSheriff()).thenReturn(false);
         when(playerSnapshot2.isSheriff()).thenReturn(true);
 
@@ -58,7 +58,7 @@ public class GameSnapshotTest {
     }
 
     @Test
-    public void getAlivePlayerCountTest() throws Exception {
+    public void testGetAlivePlayerCount() throws Exception {
         when(playerSnapshot1.isPlayerAlive()).thenReturn(false);
         when(playerSnapshot2.isPlayerAlive()).thenReturn(false);
 
@@ -67,7 +67,7 @@ public class GameSnapshotTest {
 
 
     @Test
-    public void getDeadPlayerTest() throws Exception {
+    public void testGetDeadPlayer() throws Exception {
         when(playerSnapshot1.isPlayerAlive()).thenReturn(false);
         when(playerSnapshot2.isPlayerAlive()).thenReturn(false);
         ArrayList<Integer> expectedResults = new ArrayList<Integer>();

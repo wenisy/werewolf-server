@@ -63,6 +63,7 @@ public class GameSnapshot {
         return sheriffID;
     }
 
+    //get total alive player count
     public int getAlivePlayerCount() {
         int totalAliveCount = 0;
         for(PlayerSnapshot playerTemp : playerSnapshots) {
@@ -73,6 +74,7 @@ public class GameSnapshot {
         return totalAliveCount;
     }
 
+    //get seat ID of all dead players
     public ArrayList<Integer> getDeadPlayer() {
         ArrayList<Integer> deadPlayerList = new ArrayList<Integer>();
         for(PlayerSnapshot playerTemp : playerSnapshots) {
@@ -83,7 +85,8 @@ public class GameSnapshot {
         return deadPlayerList;
     }
 
-    public HashMap<String, Integer> getAlivePlayerInfo() {
+    //get information of all alive role, like{"GOD" -> 3, "WEREWOLF" -> 3, "VILLAGER" -> 3}
+    public HashMap<String, Integer> getAliveRoleInfo() {
         HashMap<String, Integer> alivePlayerInfo  = new HashMap<String, Integer>();
         alivePlayerInfo.put("GOD",0);
         alivePlayerInfo.put("WEREWOLF",0);

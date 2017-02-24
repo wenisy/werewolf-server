@@ -75,6 +75,10 @@ public class GameState {
         return currentState;
     }
 
+    public void setCurrentState(StateDefinition currentState) {
+        this.currentState = currentState;
+    }
+
     public String getStateMessage() {
         return this.currentState.getMessage();
     }
@@ -88,6 +92,7 @@ public class GameState {
         switch (currentState) {
             case INIT: {
                 nextState = StateDefinition.WAITING_PLAYERS;
+                break;
             }
             case WAITING_PLAYERS: {
                 if(incomingSnapshot.playersAreReady() && incomingSnapshot.getNumberOfEmptySeat() == 0) {
@@ -172,12 +177,13 @@ public class GameState {
             case VOTE_FOR_APPLY_SHERIFF: {
                 nextState = StateDefinition.SHERIFF_CANDIDATE_RESULT;
                 ArrayList<Integer> campaignPlayers = incomingSnapshot.getApplySheriffID();
-                String resultMessage = "";
+                String resultMessage = nextState.getMessage();
                 for(int campaignID : campaignPlayers) {
                     resultMessage += String.valueOf(campaignID);
                     resultMessage += "号玩家,";
                 }
                 nextState.setMessage(resultMessage);
+                break;
             }
 
             case SHERIFF_CANDIDATE_RESULT: {
@@ -201,7 +207,7 @@ public class GameState {
                 ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
                 ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
                 newDeadPlayers.removeAll(oldDeadPlayers);
-                String resultMessage = "";
+                String resultMessage = nextState.getMessage();
 
                 for(int newDaadPlayerID : newDeadPlayers) {
                     resultMessage += String.valueOf(newDaadPlayerID);
@@ -227,7 +233,7 @@ public class GameState {
                 ArrayList<Integer> oldDeadPlayers = currentSnapshot.getDeadPlayer();
                 ArrayList<Integer> newDeadPlayers = incomingSnapshot.getDeadPlayer();
                 newDeadPlayers.removeAll(oldDeadPlayers);
-                String resultMessage = "";
+                String resultMessage = nextState.getMessage();
 
                 for(int newDaadPlayerID : newDeadPlayers) {
                     resultMessage += String.valueOf(newDaadPlayerID);
@@ -261,7 +267,6 @@ public class GameState {
         GameState gameState = (GameState) o;
 
         return currentState == gameState.currentState;
-
     }
 
     @Override
