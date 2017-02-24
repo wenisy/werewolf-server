@@ -2,6 +2,9 @@ package com.werewolf.models.response;
 
 import com.werewolf.models.Game;
 import com.werewolf.models.Player;
+import com.werewolf.models.Role;
+
+import java.util.Optional;
 
 public class GameResponseVO {
     private String roomNum;
@@ -11,10 +14,11 @@ public class GameResponseVO {
     private Boolean daylight;
     private Boolean alive;
 
-    public static GameResponseVO getVO(Integer seatId, Game game, String roleName){
+    public static GameResponseVO getVO(Integer seatId, Game game){
+        Optional<Player> playerOptional = game.getPlayerById(seatId);
         return GameResponseVO.getVO(game)
-                .setRole(roleName)
-                .setVoice(game.getPlayerById(seatId).map(Player::isJudge).orElseGet(() -> false));
+                .setRole(playerOptional.map(Player::getRole).map(Role::getName).orElse(""))
+                .setVoice(playerOptional.map(Player::isJudge).orElse(false));
     }
 
     public static GameResponseVO getVO(Game game) {

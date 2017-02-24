@@ -116,7 +116,7 @@ public class Game {
 
     private void processNextState(Game game, GameState next) {
         logger.info("Next state: {}", next.getStateMessage());
-        players.entrySet().forEach(entry -> entry.getValue().resetAction());
+//        players.entrySet().forEach(entry -> entry.getValue().resetAction());
 
         if (next.getCurrentState().equals(GameState.StateDefinition.WOLF_KILL)) {
             Map<Integer, Player> players = game.getPlayers();
@@ -127,9 +127,15 @@ public class Game {
                         GameResponseVO response = new GameResponseVO().setRole(player.getRole().getName()).setDaylight(false);
                         messageBroker.sendMessageToPlayer(player.getSessionId(), player.getSeatId(), response);
                     });
+        } else if(next.getCurrentState().equals(GameState.StateDefinition.WOLF_VANISH)) {
+            game.getPlayers().entrySet().forEach(entry -> {
+                entry.getValue().doAction();
+            });
         }
 
-        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+        GameResponseVO response = GameResponseVO.getVO(game.getJudge().getSeatNum(), game);
+//                new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+
         messageBroker.sendMessageToJudge(game.getJudge().getSessionId(), response);
     }
 

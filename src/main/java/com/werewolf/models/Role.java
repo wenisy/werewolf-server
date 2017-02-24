@@ -22,14 +22,14 @@ abstract public class Role {
         return actionMap;
     }
 
-    public Map<String, Object> executeAction(Map<String, Object> param){
-        String actionName = (String)param.get("action");
-        Integer target = (Integer)param.get("target");
-
-        Function action = actionMap.get(actionName);
-
-        return (Map<String, Object>) action.apply(target);
-    }
+//    public Map<String, Object> executeAction(Map<String, Object> param){
+//        String actionName = (String)param.get("action");
+//        Integer target = (Integer)param.get("target");
+//
+//        Function action = actionMap.get(actionName);
+//
+//        return (Map<String, Object>) action.apply(target);
+//    }
 
     abstract public int getType();
 

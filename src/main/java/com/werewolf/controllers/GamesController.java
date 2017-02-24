@@ -45,7 +45,7 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game, roleName));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game));
     }
 
     @MessageMapping(value = "/players")
@@ -77,10 +77,8 @@ public class GamesController {
         Optional<Player> player = game.getPlayerById(seatNum);
 
         player.ifPresent(p -> {
-            Player targetPlayer = game.getPlayerById(target).orElse(p);
-
-            p.doAction(action, targetPlayer);
-
+//            Player targetPlayer = game.getPlayerById(target).orElse(p);
+            p.predoAction(action, target);
             game.checkState();
         });
     }

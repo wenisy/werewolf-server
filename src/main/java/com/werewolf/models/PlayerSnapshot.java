@@ -18,6 +18,7 @@ public class PlayerSnapshot {
         this.isSheriff = player.isSheriff();
         this.seatID = player.getSeatId();
         this.isApplySheriff = player.isCampaign();
+        this.actionTarget = player.getActionTarget();
     }
 
     public boolean isReady() {

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
-import java.util.Map;
 
 @Component
 public class GameService {
@@ -87,24 +86,24 @@ public class GameService {
         return gamePool.getGameById(gameId);
     }
 
-    public String doAction(Game game, Player player,Map<String, Object> param){
-
-        Map<String, String> actionResult = game.getActionResultMap();
-        Map<String, Object> playerActionResult = player.getRole().executeAction(param);
-        Player target = (Player)playerActionResult.get("Object");
-
-        switch ((String)playerActionResult.get("Action")) {
-            case "vote":
-                actionResult.put("Action","vote");
-                actionResult.put("CurrentPlayer", String.valueOf(player.getSeatId()));
-                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
-                game.setActionResultMap(actionResult);
-            case "kill":
-                actionResult.put("Action", "kill");
-                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
-            default:
-                break;
-        }
-        return "Nothing was done.";
-    }
+//    public String doAction(Game game, Player player,Map<String, Object> param){
+//
+//        Map<String, String> actionResult = game.getActionResultMap();
+//        Map<String, Object> playerActionResult = player.getRole().executeAction(param);
+//        Player target = (Player)playerActionResult.get("Object");
+//
+//        switch ((String)playerActionResult.get("Action")) {
+//            case "vote":
+//                actionResult.put("Action","vote");
+//                actionResult.put("CurrentPlayer", String.valueOf(player.getSeatId()));
+//                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
+//                game.setActionResultMap(actionResult);
+//            case "kill":
+//                actionResult.put("Action", "kill");
+//                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
+//            default:
+//                break;
+//        }
+//        return "Nothing was done.";
+//    }
 }

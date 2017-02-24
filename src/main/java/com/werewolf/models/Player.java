@@ -19,6 +19,8 @@ public class Player {
     private Role role;
     private boolean actionDone;
     private int actionTarget;
+    private String action;
+
 
     private Game game;
     @Autowired
@@ -35,12 +37,12 @@ public class Player {
         this.game = game;
         this.actionDone = false;
         this.actionTarget = 0;
+        this.action = "";
     }
 
-    public void doAction(String action, Player target) {
-        this.actionTarget = target.getSeatId();
-        this.role.getAction(action).apply(target);
-        logger.info("Player {} did {} to player {}", seatId, action, target.getSeatId());
+    public void doAction() {
+        this.role.getAction(action).apply(game.getPlayerById(actionTarget).orElseGet(() -> this));
+        logger.info("Player {} did {} to player {}", seatId, action, actionTarget);
         this.actionDone = true;
     }
 
@@ -123,5 +125,11 @@ public class Player {
     public void resetAction() {
         this.actionTarget = 0;
         this.actionDone = false;
+    }
+
+    public void predoAction(String action, int target) {
+        this.actionTarget = target;
+        this.actionDone = false;
+        this.action = action;
     }
 }
