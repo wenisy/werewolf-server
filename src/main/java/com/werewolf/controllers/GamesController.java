@@ -2,7 +2,6 @@ package com.werewolf.controllers;
 
 import com.werewolf.models.Game;
 import com.werewolf.models.GameConfiguration;
-import com.werewolf.models.GameState;
 import com.werewolf.models.Player;
 import com.werewolf.models.response.GameResponseVO;
 import com.werewolf.services.GameService;
@@ -15,8 +14,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -48,7 +45,7 @@ public class GamesController {
 
         logger.info("Seat {} joined game {} successfully, role is {}.", seatId, gameId, roleName);
 
-        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game, roleName));
+        gameMessageBroker.sendMessageToJudge(sessionId, GameResponseVO.getVO(seatId, game));
     }
 
     @MessageMapping(value = "/players")
@@ -74,33 +71,15 @@ public class GamesController {
         Integer seatNum = Integer.valueOf(new JSONObject(body).getString("seatNum"));
         String gameId = new JSONObject(body).getString("roomNum");
         String action = new JSONObject(body).getString("action");
-        int seatId = new JSONObject(body).getInt("target");
+        int target = new JSONObject(body).getInt("target");
 
         Game game = gameService.getGameById(gameId);
         Optional<Player> player = game.getPlayerById(seatNum);
 
-        Map<String, Object> param = new HashMap<>();
-        param.put("Player", game.getPlayerById(seatId));
-        param.put("Action", action.split(":")[1]);
-
         player.ifPresent(p -> {
-            GameState current = game.getCurrentState();
-            Map<String, Object> actionResult = p.getRole().executeSpecialAction(param);
-            Player target = game.getPlayerById((int)actionResult.get("TargetSeatId")).get();
-            switch((String)actionResult.get("ActionResult")){
-                case "kill":
-                    target.setAlive(false);
-                    break;
-                case "saved":
-                    target.setAlive(true);
-                    break;
-                default:
-                    break;
-            }
-
-            GameState next = game.checkState();
-
-            logger.info("Player {} is killed.",target.getSeatId());
+//            Player targetPlayer = game.getPlayerById(target).orElse(p);
+            p.predoAction(action, target);
+            game.checkState();
         });
     }
 

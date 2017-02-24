@@ -1,32 +1,15 @@
 package com.werewolf.models;
 
 import com.werewolf.controllers.GameMessageBroker;
-import static com.werewolf.models.GameState.StateDefinition.APPLY_SHERIFF;
-import static com.werewolf.models.GameState.StateDefinition.DAY_RESULT;
-import static com.werewolf.models.GameState.StateDefinition.DAY_START;
-import static com.werewolf.models.GameState.StateDefinition.HUNTER_VANISH;
-import static com.werewolf.models.GameState.StateDefinition.INIT;
-import static com.werewolf.models.GameState.StateDefinition.NIGHT_RESULT;
-import static com.werewolf.models.GameState.StateDefinition.NIGHT_START;
-import static com.werewolf.models.GameState.StateDefinition.PROPHET_VANISH;
-import static com.werewolf.models.GameState.StateDefinition.SHERIFF_CANDIDATE_RESULT;
-import static com.werewolf.models.GameState.StateDefinition.SHERIFF_RESULT;
-import static com.werewolf.models.GameState.StateDefinition.WITCH_VANISH;
-import static com.werewolf.models.GameState.StateDefinition.WOLF_APPEAR;
-import static com.werewolf.models.GameState.StateDefinition.WOLF_VANISH;
 import com.werewolf.models.response.GameResponseVO;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+
+import static com.werewolf.models.GameState.StateDefinition.*;
 
 public class Game {
 
@@ -42,6 +25,7 @@ public class Game {
 
     private String gameId;
     private Judge judge;
+    private Map<String , String> actionResultMap = new HashMap<>();
 
     public boolean isDayLight() {
         return dayLight;
@@ -105,6 +89,14 @@ public class Game {
         return players;
     }
 
+    public Map<String, String> getActionResultMap() {
+        return actionResultMap;
+    }
+
+    public void setActionResultMap(Map<String, String> actionResultMap) {
+        this.actionResultMap = actionResultMap;
+    }
+
     public GameState checkState() {
         GameState current = getCurrentState();
         GameSnapshot snapshot = getSnapshot();
@@ -124,6 +116,7 @@ public class Game {
 
     private void processNextState(Game game, GameState next) {
         logger.info("Next state: {}", next.getStateMessage());
+//        players.entrySet().forEach(entry -> entry.getValue().resetAction());
 
         if (next.getCurrentState().equals(GameState.StateDefinition.WOLF_KILL)) {
             Map<Integer, Player> players = game.getPlayers();
@@ -134,9 +127,15 @@ public class Game {
                         GameResponseVO response = new GameResponseVO().setRole(player.getRole().getName()).setDaylight(false);
                         messageBroker.sendMessageToPlayer(player.getSessionId(), player.getSeatId(), response);
                     });
+        } else if(next.getCurrentState().equals(GameState.StateDefinition.WOLF_VANISH)) {
+            game.getPlayers().entrySet().forEach(entry -> {
+                entry.getValue().doAction();
+            });
         }
 
-        GameResponseVO response = new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+        GameResponseVO response = GameResponseVO.getVO(game.getJudge().getSeatNum(), game);
+//                new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
+
         messageBroker.sendMessageToJudge(game.getJudge().getSessionId(), response);
     }
 

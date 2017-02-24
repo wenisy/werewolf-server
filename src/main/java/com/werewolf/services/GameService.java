@@ -85,4 +85,25 @@ public class GameService {
     public Game getGameById(String gameId) {
         return gamePool.getGameById(gameId);
     }
+
+//    public String doAction(Game game, Player player,Map<String, Object> param){
+//
+//        Map<String, String> actionResult = game.getActionResultMap();
+//        Map<String, Object> playerActionResult = player.getRole().executeAction(param);
+//        Player target = (Player)playerActionResult.get("Object");
+//
+//        switch ((String)playerActionResult.get("Action")) {
+//            case "vote":
+//                actionResult.put("Action","vote");
+//                actionResult.put("CurrentPlayer", String.valueOf(player.getSeatId()));
+//                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
+//                game.setActionResultMap(actionResult);
+//            case "kill":
+//                actionResult.put("Action", "kill");
+//                actionResult.put("TargetPlayer", String.valueOf(target.getSeatId()));
+//            default:
+//                break;
+//        }
+//        return "Nothing was done.";
+//    }
 }

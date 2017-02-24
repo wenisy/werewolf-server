@@ -2,13 +2,13 @@ package com.werewolf.models;
 
 
 import com.werewolf.controllers.GameMessageBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Player {
+
+    private final Logger logger = LoggerFactory.getLogger(Player.class);
 
     private String sessionId;
     private int seatId;
@@ -17,6 +17,10 @@ public class Player {
     private boolean campaign;
     private boolean sheriff;
     private Role role;
+    private boolean actionDone;
+    private int actionTarget;
+    private String action;
+
 
     private Game game;
     @Autowired
@@ -31,6 +35,15 @@ public class Player {
         campaign = false;
         sheriff = false;
         this.game = game;
+        this.actionDone = false;
+        this.actionTarget = 0;
+        this.action = "";
+    }
+
+    public void doAction() {
+        this.role.getAction(action).apply(game.getPlayerById(actionTarget).orElseGet(() -> this));
+        logger.info("Player {} did {} to player {}", seatId, action, actionTarget);
+        this.actionDone = true;
     }
 
     public String getSessionId() {
@@ -89,18 +102,11 @@ public class Player {
         this.role = role;
     }
 
-
-    public Map<Integer, Integer> vote(int seatId){
-        Map<Integer, Integer> voteResult = new HashMap<>();
-        voteResult.put(this.getSeatId(), seatId);
-        return voteResult;
-    }
-
-    public List<String> skills(){
-        List<String> skills = this.getRole().getSkills();
-        if(isCampaign()){
-            skills.remove("voteForCampaign");
+    public String[] skills(){
+        if(this.isCampaign()){
+            this.getRole().getActionMap().remove("vote");
         }
+        String[] skills = (String[]) this.getRole().getActionMap().keySet().toArray();
         return skills;
     }
 
@@ -108,4 +114,22 @@ public class Player {
         return this.sessionId.equals(game.getJudge().getSessionId());
     }
 
+    public int getActionTarget() {
+        return actionTarget;
+    }
+
+    public boolean isActionDone() {
+        return actionDone;
+    }
+
+    public void resetAction() {
+        this.actionTarget = 0;
+        this.actionDone = false;
+    }
+
+    public void predoAction(String action, int target) {
+        this.actionTarget = target;
+        this.actionDone = false;
+        this.action = action;
+    }
 }
