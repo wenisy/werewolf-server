@@ -41,6 +41,9 @@ public class Player {
     }
 
     public void doAction() {
+        if(action.equals("")) {
+           return;
+        }
         this.role.getAction(action).apply(game.getPlayerById(actionTarget).orElseGet(() -> this));
         logger.info("Player {} did {} to player {}", seatId, action, actionTarget);
         this.actionDone = true;
@@ -125,6 +128,7 @@ public class Player {
     public void resetAction() {
         this.actionTarget = 0;
         this.actionDone = false;
+        this.action = "";
     }
 
     public void predoAction(String action, int target) {

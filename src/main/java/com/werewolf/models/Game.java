@@ -107,7 +107,7 @@ public class Game {
 
         if (Arrays.asList(autoTransferStates).contains(next.getCurrentState())) {
             try {
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException ignored) {}
             return this.checkState();
         }
@@ -116,7 +116,6 @@ public class Game {
 
     private void processNextState(Game game, GameState next) {
         logger.info("Next state: {}", next.getStateMessage());
-//        players.entrySet().forEach(entry -> entry.getValue().resetAction());
 
         if (next.getCurrentState().equals(GameState.StateDefinition.WOLF_KILL)) {
             Map<Integer, Player> players = game.getPlayers();
@@ -134,7 +133,6 @@ public class Game {
         }
 
         GameResponseVO response = GameResponseVO.getVO(game.getJudge().getSeatNum(), game);
-//                new GameResponseVO().setMessage(next.getStateMessage()).setVoice(true);
 
         messageBroker.sendMessageToJudge(game.getJudge().getSessionId(), response);
     }
