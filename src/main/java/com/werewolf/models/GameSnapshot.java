@@ -1,5 +1,7 @@
 package com.werewolf.models;
 
+import sun.java2d.opengl.GLXSurfaceData;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,18 +97,18 @@ public class GameSnapshot {
         int godAliveCount, woflAliveCount, villagerAliverCount = 0;
         for(PlayerSnapshot playerTemp : playerSnapshots) {
             if(playerTemp.isPlayerAlive()) {
-                switch(playerTemp.getRole().getType()) {
-                    case (0):
+                switch(playerTemp.getRole().getCategory()) {
+                    case GODS:
                         godAliveCount = alivePlayerInfo.get("GOD");
                         godAliveCount ++;
                         alivePlayerInfo.put("GOD", godAliveCount);
                         break;
-                    case (1):
+                    case WOLVES:
                         woflAliveCount = alivePlayerInfo.get("WEREWOLF");
                         woflAliveCount ++;
                         alivePlayerInfo.put("WEREWOLF", woflAliveCount);
                         break;
-                    case (2):
+                    case MORTALS:
                         villagerAliverCount = alivePlayerInfo.get("VILLAGER");
                         villagerAliverCount ++;
                         alivePlayerInfo.put("VILLAGER", villagerAliverCount);
