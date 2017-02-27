@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Player {
 
     private final Logger logger = LoggerFactory.getLogger(Player.class);
@@ -40,13 +43,14 @@ public class Player {
         this.action = "";
     }
 
-    public void doAction() {
+    public Map<String, Object> doAction() {
         if(action.equals("")) {
-           return;
+           return new HashMap<>();
         }
-        this.role.getAction(action).apply(game.getPlayerById(actionTarget).orElseGet(() -> this));
+        Map<String, Object> actionResult = (Map<String, Object>) this.role.getAction(action).apply(game.getPlayerById(actionTarget).orElseGet(() -> this));
         logger.info("Player {} did {} to player {}", seatId, action, actionTarget);
         this.actionDone = true;
+        return actionResult;
     }
 
     public String getSessionId() {

@@ -4,6 +4,8 @@ import com.werewolf.models.Game;
 import com.werewolf.models.Player;
 import com.werewolf.models.Role;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameResponseVO {
@@ -13,6 +15,9 @@ public class GameResponseVO {
     private Boolean voice;
     private Boolean daylight;
     private Boolean alive;
+    private Map<String, Boolean> skillStates = new HashMap<>();
+    private Boolean result;
+
 
     public static GameResponseVO getVO(Integer seatId, Game game){
         Optional<Player> playerOptional = game.getPlayerById(seatId);
